@@ -21,6 +21,7 @@ class UsersController < ApplicationController
   private
 
 	  def user_params
+	  		#specify required params and those permitted, all others restricted to prevent csrf
 	  		params.require(:user).permit(:name, :email, :password, :password_confirmation)
 	  end
 
