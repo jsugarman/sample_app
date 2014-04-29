@@ -4,7 +4,9 @@ class User < ActiveRecord::Base
 	has_secure_password
 
 	#before insert,update,delete triggers
-	before_save{ email.downcase! }
+	before_save{ self.email.downcase! }
+
+	before_create :create_remember_token
 
 	validates 	:name,
 				presence: true,
@@ -19,7 +21,22 @@ class User < ActiveRecord::Base
 
 	validates	:password,
 				length: { minimum: 6}
+		
+	def User.new_remember_token
+		return SecureRandom.urlsafe_base64
+	end
 
-	
+	def User.digest(token)
+		return Digest::SHA1.hexdigest(token.to_s)
+	end
+
+
+private
+
+
+	def create_remember_token
+		# create secure token for permananet signin between sessions
+		self.remember_token = User.digest(User.new_remember_token)
+	end
 
 end
