@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "User pages" do
+describe "User Pages" do
 
   subject { page }
 
@@ -43,7 +43,8 @@ describe "User pages" do
       	
       	it { should have_title('Sign up') }
       	it { should have_content('error') }
-      	it { should have_selector('div.alert.alert-error') }
+        it { should have_error_message('error')}
+      	# it { should have_selector('div.alert.alert-error') }
       end
 
     end
@@ -66,7 +67,8 @@ describe "User pages" do
 
         it { should have_link('Sign out') }
       	it { should have_title(user.name) }
-      	it { should have_selector('div.alert.alert-success', text: "Welcome") }
+        it { should have_success_message("Welcome") }
+      	# it { should have_selector('div.alert.alert-success', text: "Welcome") }
 
       end
 
