@@ -44,7 +44,6 @@ describe "Authentication Pages" do
 
   describe "authorization" do
 
-
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
 
@@ -100,6 +99,19 @@ describe "Authentication Pages" do
       end
 
     end
+
+    describe "as non-admin user" do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:non_admin) { FactoryGirl.create(:user) }
+
+      before { sign_in non_admin, no_capybara: true }
+
+      describe "submitting a DELETE request to the Users#destroy action" do
+        before { delete user_path(user) }
+        specify { expect(response).to redirect_to(root_url) }
+      end
+    end
+
   end
 
 end
