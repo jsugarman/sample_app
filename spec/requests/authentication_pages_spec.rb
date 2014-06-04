@@ -27,6 +27,7 @@ describe "Authentication Pages" do
       let(:user) { FactoryGirl.create(:user) }
       before { sign_in(user) }
 
+
       it { should have_title(user.name) }
       it { should have_link('Users',       href: users_path) }
       it { should have_link('Profile',     href: user_path(user)) }
@@ -39,6 +40,26 @@ describe "Authentication Pages" do
         it { should have_link('Sign in') }
       end
 
+    end
+
+    describe "followed by" do
+        let(:user) { FactoryGirl.create(:user) }
+        before { sign_in user, no_capybara: true }
+
+        describe "sign in" do
+          before {  get new_user_path }
+          specify { expect(response).to redirect_to(root_url) } 
+        end
+
+        describe "sign up" do
+          before {  get signup_path }
+          specify { expect(response).to redirect_to(root_url) } 
+        end
+
+        describe "post on user" do
+          before {  post users_path }
+          specify { expect(response).to redirect_to(root_url) } 
+        end
     end
 
   end
@@ -66,6 +87,7 @@ describe "Authentication Pages" do
             it "should render the desired protected page" do
               expect(page).to have_title('Edit user')
             end
+
           end
       end
 
@@ -85,6 +107,7 @@ describe "Authentication Pages" do
           before { visit users_path }
           it { should have_title('Sign in') }
         end
+
       end
 
     end
@@ -106,7 +129,7 @@ describe "Authentication Pages" do
       end
 
     end
-
+ 
     describe "as non-admin user" do
       let(:user) { FactoryGirl.create(:user) }
       let(:non_admin) { FactoryGirl.create(:user) }

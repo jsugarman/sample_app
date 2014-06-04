@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "User Pages" do
 
   subject { page }
-  
+
 # -----------------------------
     describe "index" do
     let(:user) { FactoryGirl.create(:user) }
@@ -12,8 +12,10 @@ describe "User Pages" do
       visit users_path
     end
 
-    it { should have_title('All users') }
-    it { should have_content('All users') }
+    describe "page" do
+      it { should have_title('All users') }
+      it { should have_content('All users') }
+    end
 
     describe "pagination" do
 
@@ -49,7 +51,9 @@ describe "User Pages" do
             end.to change(User, :count).by(-1)
           end
         
-          it { should_not have_link('delete', href: user_path(admin)) }
+          it "should not be able to delete itself" do
+            should_not have_link('delete', href: user_path(admin))
+          end
         
         end
 

@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 
-	before_action :signed_in_user, only: [:index,:edit,:update, :destroy] 
+	before_action :unsigned_in_user, only: [:new, :create]
+	before_action :signed_in_user, only: [:index, :edit, :update, :destroy] 
 	before_action :correct_user, only: [:edit, :update]
 	before_action :admin_user, only: :destroy
 
@@ -53,6 +54,10 @@ private
 	def user_params
 		#specify required params and those permitted, all others restricted to prevent csrf
 		params.require(:user).permit(:name, :email, :password, :password_confirmation)
+	end
+
+	def unsigned_in_user
+		redirect_to(root_url, notice: "You are already signed in!") if signed_in?
 	end
 
 	def signed_in_user
