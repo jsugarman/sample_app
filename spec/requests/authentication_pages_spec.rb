@@ -129,6 +129,19 @@ describe "Authentication Pages" do
       end
 
     end
+
+    describe "as admin user" do
+
+      let (:admin) { FactoryGirl.create(:admin) }
+      before { sign_in admin, no_capybara: true }
+
+      describe "submitting a DELETE request to the users#destroy action for themselves" do
+          specify { expect { delete user_path(admin) }.to_not change(User, :count).by(-1) }
+          before { delete user_path(admin) }
+          specify { expect(response).to redirect_to(users_path) }
+      end
+
+    end
  
     describe "as non-admin user" do
       let(:user) { FactoryGirl.create(:user) }
