@@ -3,9 +3,9 @@ require 'spec_helper'
 describe User do
 
 
-it "has a valid factory" do
-	FactoryGirl.build(:user).should be_valid
-end
+  it "has a valid factory" do
+  	FactoryGirl.build(:user).should be_valid
+  end
 
   before do
    @user = User.new(name: "Example User", email: "user@example.com",
@@ -145,6 +145,19 @@ end
       @user.microposts.should == [newer_micropost, older_micropost]
     end
 
-  end
+    it "when delete user cascade microposts" do
+
+      microposts = @user.microposts.dup
+      @user.destroy
+      # microposts.should_not be_empty
+
+      microposts.each do |micropost|
+        # expect(Micropost.find_by_id(micropost.id)).to be_nil
+        Micropost.find_by_id(micropost.id).should be_nil
+
+      end
+    end
+
+  end 
 
 end
