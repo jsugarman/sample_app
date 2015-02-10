@@ -7,8 +7,8 @@ describe Micropost do
 	let (:user) { FactoryGirl.create(:user) }
 	before do
 
-		@micropost = Micropost.new(content: "lorem ipsum", user_id: user.id)
-		# @micropost = user.micropost.build("lorem ipsum")
+		# @micropost = Micropost.new(content: "lorem ipsum", user_id: user.id)
+		@micropost = user.microposts.build(content: "lorem ipsum")
 	end
 
 	subject { @micropost }

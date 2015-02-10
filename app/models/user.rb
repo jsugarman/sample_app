@@ -1,7 +1,5 @@
 class User < ActiveRecord::Base
 
-	attr_accesible
-
 	#bcrypt-ruby Gem add-in method
 	has_secure_password
 
