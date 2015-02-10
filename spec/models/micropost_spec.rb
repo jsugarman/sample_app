@@ -23,9 +23,17 @@ describe Micropost do
 	it { expect(subject).to be_valid }
 
 	describe "when user_id is NOT present" do
-
 		before { @micropost.user_id = nil }
 		it { expect(subject).not_to be_valid }
 	end
+
+	describe "accessible attributes" do
+	
+		it "should prevent access to user_id" do
+			expect (Microposts.new(user_id: user.id)).to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+		end
+
+	end
+
 
 end

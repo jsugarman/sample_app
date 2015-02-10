@@ -27,5 +27,9 @@ module SampleApp
 
     #added for asset pipeline compatability
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+
+    config.active_record.whitelist_attributes = true
+
+
   end
 end

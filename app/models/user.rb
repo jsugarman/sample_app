@@ -1,7 +1,11 @@
 class User < ActiveRecord::Base
 
+	attr_accesible
+
 	#bcrypt-ruby Gem add-in method
 	has_secure_password
+
+	has_many :microposts
 
 	#before insert,update,delete triggers
 	before_save{ self.email.downcase! }
