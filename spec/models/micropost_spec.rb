@@ -15,19 +15,23 @@ describe Micropost do
 
 	# it { should respond_to (:content) }
 	# it { should respond_to (:user_id) }
+	# context "when valid requests" do
+		it { expect(subject).to respond_to(:content) }
+		it { expect(subject).to respond_to(:user_id) }
+		it { expect(subject).to respond_to(:user) }	
+		it { expect(subject).to be_valid }
+	# end
 
-	it { expect(subject).to respond_to(:content) }
-	it { expect(subject).to respond_to(:user_id) }
+	context "methods" do
+		its(:user) { should == user}
+	end	
 
-
-	it { expect(subject).to be_valid }
-
-	describe "when user_id is NOT present" do
+	context "when user_id is NOT present" do
 		before { @micropost.user_id = nil }
 		it { expect(subject).not_to be_valid }
 	end
 
-	describe "accessible attributes" do
+	context "when accessing attributes" do
 	
 		it "should prevent access to user_id" do
 			pending("but needs doing in controller with param.require.permit") do

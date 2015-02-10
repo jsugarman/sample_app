@@ -22,6 +22,7 @@ end
   it { should respond_to(:authenticate) }
   it { should respond_to(:remember_token) }
   it { should respond_to(:admin) }
+  it  { should respond_to(:microposts) }
 
   it { should be_valid }
   it { should_not be_admin }
@@ -131,6 +132,19 @@ end
   describe "when saving" do
     before { @user.save }
     its(:remember_token) { should_not be_blank }
+  end
+
+
+  describe "micropost associations" do
+    before { @user.save }
+    
+    let!(:newer_micropost) { FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago) }
+    let!(:older_micropost) { FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago) }
+
+    it "should have the right ordering of microposts" do
+      @user.microposts.should == [newer_micropost, older_micropost]
+    end
+
   end
 
 end

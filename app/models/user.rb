@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 	#bcrypt-ruby Gem add-in method
 	has_secure_password
 
-	has_many :microposts
+	has_many :microposts, -> { order 'created_at desc' }
 
 	#before insert,update,delete triggers
 	before_save{ self.email.downcase! }
