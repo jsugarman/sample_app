@@ -1,6 +1,8 @@
 class MicropostsController < ApplicationController
 
 
+
+
 # private
 
 	# def micropost_params

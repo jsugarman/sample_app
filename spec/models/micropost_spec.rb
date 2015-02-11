@@ -22,7 +22,7 @@ describe Micropost do
 		it { expect(subject).to be_valid }
 	# end
 
-	context "methods" do
+	context "when micrpost.user called" do
 		its(:user) { should == user}
 	end	
 
@@ -40,6 +40,17 @@ describe Micropost do
 		end
 
 	end
+
+	context "when content is blank" do
+		before { @micropost.content = " "}
+		it { expect(subject).to_not be_valid}
+	end
+
+	context "when content is too long" do
+		before{ @micropost.content = "a"*141 }
+		it{ expect(subject).to_not be_valid}
+	end
+
 
 
 end
