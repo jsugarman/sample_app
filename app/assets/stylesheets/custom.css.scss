@@ -3,7 +3,8 @@
 /* mixins, variables, etc. */
 
 $grayMediumLight: #eaeaea;
-$grayLightTest: #eaeaea;
+$grayLight: #eaeaea;
+$grayLighter: #eaeaea;
 
 @mixin box_sizing {
   -moz-box-sizing: border-box;
@@ -146,10 +147,36 @@ aside {
      }
 }
 
+/* microposts */
+
+.microposts {
+  list-style: none;
+  margin: 10px 0 0 0;
+
+  li {
+    padding: 10px 0;
+    border-top: 1px solid #e8e8e8;
+  }
+}
+.content {
+  display: block;
+}
+.timestamp {
+  color: $grayLight;
+}
+aside {
+  textarea {
+    height: 100px;
+    margin-bottom: 5px;
+  }
+}
+
 .gravatar {
   float: left;
   margin-right: 10px;
 }
+
+
 
 /* forms */
 
