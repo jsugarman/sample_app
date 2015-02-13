@@ -22,7 +22,7 @@ describe Micropost do
 		it { expect(subject).to be_valid }
 	# end
 
-	context "when micrpost.user called" do
+	context "when micropost.user called" do
 		its(:user) { should == user}
 	end	
 

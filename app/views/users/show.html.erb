@@ -10,6 +10,9 @@
     </section>  
   </aside>
   <div class="span8">
+  
+
+    <%= render 'edit_micropost' %>
   	<% if @user.microposts.any? %>
   	<h3>Microposts ( <%= @user.microposts.count %>)</h3>
     <ol class="microposts">
@@ -17,5 +20,6 @@
    </ol>
    <%= will_paginate @microposts %>
    <% end %>
+   
  </div>
 </div>
