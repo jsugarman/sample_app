@@ -35,7 +35,7 @@ describe Micropost do
 	
 		it "should prevent access to user_id" do
 			pending("but needs doing in controller with param.require.permit") do
-				expect (Microposts.new(user_id: user.id)).to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+				expect (Micropost.new(user_id: user.id)).to raise_error(ActiveModel::MassAssignmentSecurity::Error)
 			end
 		end
 
