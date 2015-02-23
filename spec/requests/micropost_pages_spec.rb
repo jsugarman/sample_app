@@ -14,7 +14,7 @@ before { sign_in user }
 
  	context "with invalid information" do
 
- 		it "should not not create a micropost" do
+ 		it "should not create a micropost" do
  			expect {click_button "Post" }.not_to change(Micropost, :count)
  		end
  		

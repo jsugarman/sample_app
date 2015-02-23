@@ -34,8 +34,8 @@ describe Micropost do
 	context "when accessing attributes" do
 	
 		it "should prevent access to user_id" do
-			pending("but needs doing in controller with param.require.permit") do
-				expect (Micropost.new(user_id: user.id)).to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+			pending("but test needs ActiveModel::MassAssignmentSecurity::Error object inclusion first") do
+				expect (Micropost.new(user_id: user.id)).to raise_error(ActiveModel::MassAssignmentSecurity::Error) 
 			end
 		end
 

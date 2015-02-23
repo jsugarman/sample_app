@@ -34,6 +34,12 @@ class User < ActiveRecord::Base
 		return Digest::SHA1.hexdigest(token.to_s)
 	end
 
+	def feed
+		# This is preliminary - TBC
+		Micropost.where("user_id = ?",id).order(created_at:  :desc)
+	end
+
+
 
 private
 

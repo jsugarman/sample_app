@@ -162,12 +162,22 @@ describe User do
 
     describe "status" do
       let(:unfollowed_micropost) { FactoryGirl.create(:micropost, user: FactoryGirl.create(:user)) }
-      it { expect(:feed).to include(newer_micropost) }
-      it { expect(:feed).to include(older_micropost) }
-      it { expect(:feed).to include(unfollowed_micropost) }
-      # its(:feed) { should include(newer_micropost) }
-      # its(:feed) { should include(older_micropost) }
-      # its(:feed) { should include(unfollowed_micropost) }
+     
+     #  it "should include newer micropost" do
+     #   expect(:feed).to include?(newer_micropost) 
+     # end
+     #  it "should include older micropost" do
+     #   expect(:feed).to include?(older_micropost) 
+     #  end
+     #  it "should include older micropost" do 
+     #    expect(:feed).to include(unfollowed_micropost)
+     #  end
+      # 
+      # from tutorial
+      # 
+      its(:feed) { should include(newer_micropost) }
+      its(:feed) { should include(older_micropost) }
+      its(:feed) { should_not include(unfollowed_micropost) }
     end
 
   end 
