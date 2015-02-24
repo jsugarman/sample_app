@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
 	#bcrypt-ruby Gem add-in method
 	has_secure_password
 
+	has_many :microposts, -> { order 'created_at desc' }, dependent: :destroy
+
 	#before insert,update,delete triggers
 	before_save{ self.email.downcase! }
 
@@ -31,6 +33,12 @@ class User < ActiveRecord::Base
 	def User.digest(token)
 		return Digest::SHA1.hexdigest(token.to_s)
 	end
+
+	def feed
+		# This is preliminary - TBC
+		Micropost.where("user_id = ?",id).order(created_at:  :desc)
+	end
+
 
 
 private

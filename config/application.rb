@@ -27,5 +27,6 @@ module SampleApp
 
     #added for asset pipeline compatability
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+
   end
 end

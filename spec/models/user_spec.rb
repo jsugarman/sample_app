@@ -3,9 +3,9 @@ require 'spec_helper'
 describe User do
 
 
-it "has a valid factory" do
-	FactoryGirl.build(:user).should be_valid
-end
+  it "has a valid factory" do
+  	FactoryGirl.build(:user).should be_valid
+  end
 
   before do
    @user = User.new(name: "Example User", email: "user@example.com",
@@ -22,6 +22,8 @@ end
   it { should respond_to(:authenticate) }
   it { should respond_to(:remember_token) }
   it { should respond_to(:admin) }
+  it { should respond_to(:microposts) }
+  it { should respond_to(:feed) }
 
   it { should be_valid }
   it { should_not be_admin }
@@ -90,7 +92,7 @@ end
       user_with_same_email.save
     end
 
-    it { should_not be_valid }
+    specify { should_not be_valid }
   end
 
   describe "when password is not present" do
@@ -98,17 +100,17 @@ end
 	@user = User.new(name: "Example User", email: "user@example.com",
 	                 password: " ", password_confirmation: " ")
 	end
-	it { should_not be_valid }
+	specify { should_not be_valid }
   end
 
   describe "when password doesn't match confirmation" do
     before { @user.password_confirmation = "mismatch" }
-    it { should_not be_valid }
+    specify { should_not be_valid }
   end
 
   describe "when password is too short" do
   	before {@user.password = @user.password_confirmation = "a" * 5}
-  	it { should be_invalid }
+  	specify { should be_invalid }
   end
 
   describe "return value of authenticate method" do
@@ -116,13 +118,13 @@ end
 	  let(:found_user) { User.find_by(email: @user.email) }
 
 	  describe "with valid password" do
-	    it { should eq found_user.authenticate(@user.password) }
+	    specify { should eq found_user.authenticate(@user.password) }
 	  end
 
 	  describe "with invalid password" do
 	    let(:user_for_invalid_password) { found_user.authenticate("invalid") }
 
-	    it { should_not eq user_for_invalid_password }
+	    specify { should_not eq user_for_invalid_password }
 	    specify { expect(user_for_invalid_password).to be_false }
 	  end
 
@@ -132,5 +134,52 @@ end
     before { @user.save }
     its(:remember_token) { should_not be_blank }
   end
+
+
+  describe "micropost associations" do
+    before { @user.save }
+    
+    let!(:newer_micropost) { FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago) }
+    let!(:older_micropost) { FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago) }
+
+    it "should have the right ordering of microposts" do
+      @user.microposts.should == [newer_micropost, older_micropost]
+    end
+
+    it "when delete user cascade microposts" do
+
+      microposts = @user.microposts.dup
+      @user.destroy
+      # microposts.should_not be_empty
+
+      microposts.each do |micropost|
+        # expect(Micropost.find_by_id(micropost.id)).to be_nil
+        Micropost.find_by_id(micropost.id).should be_nil
+
+      end
+    end
+
+
+    describe "status" do
+      let(:unfollowed_micropost) { FactoryGirl.create(:micropost, user: FactoryGirl.create(:user)) }
+     
+     #  it "should include newer micropost" do
+     #   expect(:feed).to include?(newer_micropost) 
+     # end
+     #  it "should include older micropost" do
+     #   expect(:feed).to include?(older_micropost) 
+     #  end
+     #  it "should include older micropost" do 
+     #    expect(:feed).to include(unfollowed_micropost)
+     #  end
+      # 
+      # from tutorial
+      # 
+      its(:feed) { should include(newer_micropost) }
+      its(:feed) { should include(older_micropost) }
+      its(:feed) { should_not include(unfollowed_micropost) }
+    end
+
+  end 
 
 end
