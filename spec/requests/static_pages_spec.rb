@@ -23,6 +23,7 @@ describe "Static Pages" do
       before do
         FactoryGirl.create(:micropost, user: user, content: "lorem ipsum")
         FactoryGirl.create(:micropost, user: user, content: "dolor sit amet")
+        # FactoryGirl.create(:micropost, user: user, content: "3rd micropost - dolor sit amet")
         sign_in user
         visit root_path
       end
@@ -32,8 +33,11 @@ describe "Static Pages" do
             expect(page).to have_selector("li##{item.id}", text: item.content)
           end
       end
-      
 
+      it "should display a pluralized count of user microposts" do
+        micropost_count = user.microposts.count
+        expect(page).to have_selector('span', text:  "#{micropost_count} micropost".pluralize(micropost_count))
+      end
       
       describe "should render feed in descending order of creation date" do
 
