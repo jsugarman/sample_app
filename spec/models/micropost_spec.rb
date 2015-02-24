@@ -13,8 +13,6 @@ describe Micropost do
 
 	subject { @micropost }
 
-	# it { should respond_to (:content) }
-	# it { should respond_to (:user_id) }
 	# context "when valid requests" do
 		it { expect(subject).to respond_to(:content) }
 		it { expect(subject).to respond_to(:user_id) }
@@ -31,16 +29,6 @@ describe Micropost do
 		it { expect(subject).not_to be_valid }
 	end
 
-	context "when accessing attributes" do
-	
-		it "should prevent access to user_id" do
-			pending("but test needs ActiveModel::MassAssignmentSecurity::Error object inclusion first") do
-				expect (Micropost.new(user_id: user.id)).to raise_error(ActiveModel::MassAssignmentSecurity::Error) 
-			end
-		end
-
-	end
-
 	context "when content is blank" do
 		before { @micropost.content = " "}
 		it { expect(subject).to_not be_valid}
@@ -48,7 +36,16 @@ describe Micropost do
 
 	context "when content is too long" do
 		before{ @micropost.content = "a"*141 }
-		it{ expect(subject).to_not be_valid}
+		specify { expect(subject).to_not be_valid}
 	end
+
+	context "when user_id updated" do
+		# before { @micropost.user_id = 201 }
+		specify "it should prevent changing of user_id" do
+			pending "need test ensure controller cannot modify user_id attribute"
+		 	expect(@micropost.user_id).to_not eq(201)
+		end
+	end
+
 
 end
