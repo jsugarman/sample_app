@@ -2,6 +2,7 @@ class MicropostsController < ApplicationController
 
 
 before_filter :signed_in_user , only: [:create, :destroy]
+before_filter :correct_user, only: :destroy
 # before_action :signed_in_user, only: [:create, :destroy]
 
 def create
@@ -17,6 +18,9 @@ def create
 end
 
 def destroy
+	@micropost.destroy
+	flash[:success] = "Micropost Deleted!"
+	redirect_to root_url
 end
 
 # ------------------------------
@@ -27,5 +31,12 @@ def micropost_params
 	params.require(:micropost).permit(:content)
 	# params.require(:user).permit(:name, :email, :password, :password_confirmation)
 end	
+
+# NOTE: overrides user_controller.rb correct_user method
+def correct_user
+	@micropost = current_user.microposts.find_by_id(params[:id])
+	redirect_to root_url if @micropost.nil?
+end
+
 
 end

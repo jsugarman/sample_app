@@ -33,6 +33,8 @@ describe "Static Pages" do
           end
       end
       
+
+      
       describe "should render feed in descending order of creation date" do
 
         let!(:feed_user) { FactoryGirl.create(:user) }
@@ -45,7 +47,7 @@ describe "Static Pages" do
 
         it "should have the right ordering of microposts" do
           pending " not working fix"
-          feed_user.microposts.should == [older_feed,newer_feed]
+          feed_user.microposts.should == [newer_feed,older_feed]
         end
       end
 
