@@ -12,53 +12,64 @@ describe "Static Pages" do
   end
 
   describe "Home page" do
+  
     before { visit root_path }
     let(:heading)    { 'Sample App' }
     let(:page_title) { '' }
     it_should_behave_like "all static pages"    
     it { should_not have_title('Home') }
 
-    context "for signed in users" do
+    describe "for signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
       before do
-        FactoryGirl.create(:micropost, user: user, content: "lorem ipsum")
-        FactoryGirl.create(:micropost, user: user, content: "dolor sit amet")
-        # FactoryGirl.create(:micropost, user: user, content: "3rd micropost - dolor sit amet")
+        # puts "BEFORE each signed-in user example"
+        # 
+        # create sufficient microposts to require more than one page
+        # 
+        31.times { FactoryGirl.create(:micropost, user: user, content: Faker::Lorem.sentence(5)) }
         sign_in user
         visit root_path
       end
-
-      it "should render the users\'s feed - i.e. list of microposts" do
-          user.feed.each do |item|
-            expect(page).to have_selector("li##{item.id}", text: item.content)
-          end
-      end
+      after { user.microposts.destroy_all }
 
       it "should display a pluralized count of user microposts" do
         micropost_count = user.microposts.count
-        expect(page).to have_selector('span', text:  "#{micropost_count} micropost".pluralize(micropost_count))
+        expect(page).to have_selector('span', text:  "#{ micropost_count } micropost".pluralize(micropost_count))
       end
-      
-      describe "should render feed in descending order of creation date" do
-
-        let!(:feed_user) { FactoryGirl.create(:user) }
-        # before do          
-          
-          # feed_user.save
-          let!(:newer_feed) { FactoryGirl.create(:micropost, user: feed_user, created_at: 1.hour.ago) }
-          let!(:older_feed) { FactoryGirl.create(:micropost, user: feed_user, created_at: 1.day.ago) }
-        # end
-
-        it "should have the right ordering of microposts" do
-          pending " not working fix"
-          feed_user.microposts.should == [newer_feed,older_feed]
+      it "should apply pagination" do
+        expect(page).to have_selector('div.pagination')
+      end
+      it "should render the user's feed, 30 per page" do
+        user.feed.paginate(page: 1, :per_page => 30).each do |item|
+          expect(page).to have_selector("li##{item.id}", text: item.content)
         end
       end
+      describe "should render feed by descending date created" do
+        pending("needs implementing")
+        let!(:newest_feed) { FactoryGirl.create(:micropost, user: user, created_at: 1.minute.ago) }
+        let!(:newer_feed) { FactoryGirl.create(:micropost, user: user, created_at: 1.hour.ago) }
+        let!(:older_feed) { FactoryGirl.create(:micropost, user: user, created_at: 1.day.ago) }
+        
+        xit "should render feed in descending order of creation date" do
+          user.microposts.should == [newest_feed, newer_feed, older_feed]
+        end  
+      end
+      describe "should prevent deletion of other user's posts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before { visit user_path(other_user) }
+        it { expect(page).to_not have_link('delete') }
+      end
+      describe "each feed item" do
+        it "should have a list item with unqiue id" do 
+          user.feed.paginate(page: 1, :per_page => 30).each do |item|
+              expect(page).to have_selector("li##{item.id}")
+          end
+        end
+      end
+      
+    end #signed in end
 
-    end
-
-
-  end
+  end #home page end
 
   describe "Help page" do
     before { visit help_path }
