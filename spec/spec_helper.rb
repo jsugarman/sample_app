@@ -44,6 +44,11 @@ Spork.prefork do
   require 'rspec/rails'
   require 'rspec/autorun'
 
+  # added to enable javascript testing features - SEE BELOW for more on this
+  # require 'capybara/rspec'
+  require 'capybara/webkit/matchers'
+  Capybara.javascript_driver = :webkit
+
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
@@ -67,7 +72,8 @@ Spork.prefork do
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
     # examples within a transaction, remove the following line or assign false
     # instead of true.
-    config.use_transactional_fixtures = true
+    # set to false below for javascript testing. jsugarman 27/02/2015
+    # config.use_transactional_fixtures = true
 
     # If true, the base class of anonymous controllers will be inferred
     # automatically. This will be the default behavior in future versions of
@@ -82,6 +88,26 @@ Spork.prefork do
 
     #included by jsugarman
     config.include Capybara::DSL
+
+    # 
+    # added to enable javascript testing features - also requires use_transactional_fixtures to be set to false
+    #----------------------------- 
+    config.use_transactional_fixtures = false
+
+
+    # config.before(:each) do
+    #   DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+    #   DatabaseCleaner.start
+    # end
+    # config.after(:each) do
+    #   DatabaseCleaner.clean
+    # end
+    cleanerConfig(config)
+
+    
+    #-----------------------------
+    # end of section added for javscript testing
+
   end
 end
 

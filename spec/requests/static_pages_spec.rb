@@ -32,6 +32,14 @@ describe "Static Pages" do
       end
       after { user.microposts.destroy_all }
 
+      describe "should update \"remaining characters\" using javascript" do
+        before do 
+          fill_in 'micropost_content', with: "13 characters" 
+        end
+        it "",js: true do
+          expect(page).to have_selector('td.countdown', text: '127 characters remaining')
+        end
+      end
       it "should display a pluralized count of user microposts" do
         micropost_count = user.microposts.count
         expect(page).to have_selector('span', text:  "#{ micropost_count } micropost".pluralize(micropost_count))
