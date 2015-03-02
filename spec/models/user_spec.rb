@@ -25,6 +25,8 @@ describe User do
   it { should respond_to(:feed) }
   it { should respond_to(:relationships) }
   it { should respond_to(:followed_users) }
+  it { should respond_to(:reverse_relationships) }
+  it { should respond_to(:followers) }
   it { should respond_to(:follow!) } 
   it { should respond_to(:following?) } 
   it { should respond_to(:unfollow!) } 
@@ -213,10 +215,16 @@ describe User do
     end
     describe "should have unfollowing! method" do
       before { @user.unfollow!(other_user) }
-      it " that removes specified followed user" do
+      it "that removes specified followed user" do
         expect(@user.followed_users).not_to include(other_user)
       end
     end
+    describe "followed user" do
+      it "should include follower" do
+        expect(other_user.followers).to include(@user) 
+      end
+    end
+
   end # end of following block
 
 

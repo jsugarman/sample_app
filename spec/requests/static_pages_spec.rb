@@ -22,7 +22,6 @@ describe "Static Pages" do
     describe "for signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
       before do
-        # puts "BEFORE each signed-in user example"
         # 
         # create sufficient microposts to require more than one page
         # 
@@ -54,14 +53,13 @@ describe "Static Pages" do
         end
       end
       describe "should render feed by descending date created" do
-        pending("needs implementing")
-        let!(:newest_feed) { FactoryGirl.create(:micropost, user: user, created_at: 1.minute.ago) }
-        let!(:newer_feed) { FactoryGirl.create(:micropost, user: user, created_at: 1.hour.ago) }
-        let!(:older_feed) { FactoryGirl.create(:micropost, user: user, created_at: 1.day.ago) }
+        # pending("needs implementing")
+        let(:ordered_user) { FactoryGirl.create(:user) }
+        let!(:newest_feed) { FactoryGirl.create(:micropost, user: ordered_user, created_at: 1.minute.ago) }
+        let!(:newer_feed) { FactoryGirl.create(:micropost, user: ordered_user, created_at: 1.hour.ago) }
+        let!(:older_feed) { FactoryGirl.create(:micropost, user: ordered_user, created_at: 1.day.ago) }
         
-        xit "should render feed in descending order of creation date" do
-          user.microposts.should == [newest_feed, newer_feed, older_feed]
-        end  
+        it { expect(ordered_user.microposts).to match_array([newest_feed, newer_feed, older_feed]) } 
       end
       describe "should prevent deletion of other user's posts" do
         let(:other_user) { FactoryGirl.create(:user) }
