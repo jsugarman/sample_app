@@ -1,5 +1,9 @@
 def cleanerConfig (config)
 
+  # 
+  # not used
+  # 
+
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end

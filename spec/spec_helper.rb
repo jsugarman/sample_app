@@ -46,8 +46,8 @@ Spork.prefork do
 
   # added to enable javascript testing features - SEE BELOW for more on this
   # require 'capybara/rspec'
-  require 'capybara/webkit/matchers'
-  Capybara.javascript_driver = :webkit
+  # require 'capybara/webkit/matchers'
+  # Capybara.javascript_driver = :webkit
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
@@ -92,7 +92,7 @@ Spork.prefork do
     # 
     # added to enable javascript testing features - also requires use_transactional_fixtures to be set to false
     #----------------------------- 
-    config.use_transactional_fixtures = false
+    config.use_transactional_fixtures = true
 
 
     # config.before(:each) do
@@ -102,7 +102,7 @@ Spork.prefork do
     # config.after(:each) do
     #   DatabaseCleaner.clean
     # end
-    cleanerConfig(config)
+    # cleanerConfig(config)
 
     
     #-----------------------------
