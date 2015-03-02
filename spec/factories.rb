@@ -13,9 +13,18 @@ FactoryGirl.define do
     
   end
 
+  factory :other_user do
+    user
+  end
+
   factory :micropost do
     content "lorem ipsem"
     user
+  end
+
+  factory :relationship do
+    follower_id user
+    followed_id other_user
   end
 
 end

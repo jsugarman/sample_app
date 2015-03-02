@@ -5,6 +5,14 @@ class User < ActiveRecord::Base
 
 	has_many :microposts, -> { order 'created_at desc' }, dependent: :destroy
 
+	# 
+	# relationships table containts 2 foreign keys to users table
+	#  - the follower id cannot be changed, the followed can be
+	#  - if the  user is destroyed so to is any record of whom they are following
+	#  
+	has_many :relationships, foreign_key: "follower_id", dependent: :destroy
+	has_many :followed_users, through: :relationships, source: :followed
+
 	#before insert,update,delete triggers
 	before_save{ self.email.downcase! }
 
@@ -39,6 +47,18 @@ class User < ActiveRecord::Base
 		Micropost.where("user_id = ?",id).order(created_at:  :desc)
 	end
 
+	def follow!(other_user)
+		self.relationships.create!(followed_id: other_user.id)
+	end
+
+	def unfollow!(other_user)
+		self.relationships.find_by_followed_id(other_user.id).destroy!	
+	end
+
+	def following?(other_user)
+		# relationships.where('follower_id = ? and followed_id = ?', id, other_user.id )
+		self.relationships.find_by_followed_id(other_user.id)
+	end
 
 
 private
