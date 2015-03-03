@@ -1,0 +1,9 @@
+<!--
+ 	create record with follower_id being the current user 
+	and followed_id being the profile user of the page 
+-->
+
+<%= form_for (current_user.relationships.build(followed_id: @user.id)) do |f| %>
+	<div><%= f.hidden_field :followed_id %></div>
+	<%= f.submit "Follow", class: "btn btn-large btn-primary" %>
+<% end %>

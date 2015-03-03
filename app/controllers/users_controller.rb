@@ -1,59 +1,74 @@
 class UsersController < ApplicationController
 
 	before_action :unsigned_in_user, only: [:new, :create]
-	before_action :signed_in_user, only: [:index, :edit, :update, :destroy] 
+	before_action :signed_in_user, only: [:index, :edit, :update, :destroy, :following, :followers] 
 	before_action :correct_user, only: [:edit, :update]
 	before_action :admin_user, only: [ :destroy ]
 
 
-	  def index
-	  	@users = User.paginate(page: params[:page])
-	  end
+	def index
+		@users = User.paginate(page: params[:page])
+	end
 
-	  def show
-	  	@user = User.find(params[:id])
-	  	@microposts = @user.microposts.paginate(page: params[:page])
-	  end
+	def show
+		@user = User.find(params[:id])
+		@microposts = @user.microposts.paginate(page: params[:page])
+	end
 
-	  def new
-	  	@user = User.new
-	  end
+	def new
+		@user = User.new
+	end
 
-	  def edit
-	  end
+	def edit
+	end
 
-	  def update
-	    if @user.update_attributes(user_params)
-	      flash[:success] = "Profile updated"
+	def update
+		if @user.update_attributes(user_params)
+		  flash[:success] = "Profile updated"
 		  redirect_to @user
-	    else
-	      render 'edit'
-	    end
-	  end
+		else
+		  render 'edit'
+		end
+	end
 
-	  def create
-	    @user = User.new(user_params)    # Not the final implementation!
-	    if @user.save
-	    	sign_in @user
+	def create
+		@user = User.new(user_params)    # Not the final implementation!
+		if @user.save
+			sign_in @user
 			flash[:success] = "Welcome to the Sample App!"
 			redirect_to @user
-	    else
+		else
 			render 'new'
-	    end
-	  end
+		end
+	end
 
-	  def destroy
-	  	user_to_delete = User.find(params[:id])
+	def destroy
+		user_to_delete = User.find(params[:id])
 
 		if current_user?(user_to_delete)
-			flash[:failure] = "You cannot delete yourself, even if you are admin!"	
+		flash[:failure] = "You cannot delete yourself, even if you are admin!"	
 		else
-		    user_to_delete.destroy
-			flash[:success] = "User deleted."		
+		user_to_delete.destroy
+		flash[:success] = "User deleted."		
 		end
-	   
-	    redirect_to users_path
-  	  end
+
+		redirect_to users_path
+	end
+
+
+	def following
+		@title = "Following"
+		@user = User.find(params[:id])
+		@users = @user.followed_users.paginate(page: params[:page])
+		render 'show_follow'
+	end
+
+	def followers
+		@title = "Followers"
+		@user = User.find(params[:id])
+		@users = @user.followers.paginate(page: params[:page])
+		render 'show_follow'
+	end
 
 # -----------------------
 private

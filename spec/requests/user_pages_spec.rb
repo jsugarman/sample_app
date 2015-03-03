@@ -34,18 +34,14 @@ describe 'Index Page' do
   end
 
   describe 'delete links' do
-
     it { should_not have_link('delete') }
-
     describe 'as an admin user' do
       let(:admin) { FactoryGirl.create(:admin) }
       before do
         sign_in admin
         visit users_path
       end
-
       it { should have_link('delete', href: user_path(User.first)) }
-      
       it 'should be able to delete another user' do
         expect do
           click_link('delete', match: :first)
@@ -55,9 +51,7 @@ describe 'Index Page' do
         should_not have_link('delete', href: user_path(admin))
       end    
     end
-
   end
-
 end
 
 # -----------------------------
@@ -187,5 +181,32 @@ describe 'Edit Page' do
 
   end
   # -----------------------------
+
+  describe "Following/Followers Pages" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    before{ user.follow!(other_user) }
+
+    describe "following users" do
+      before do
+         sign_in user
+         visit following_user_path(user)
+      end
+      it { expect(page).to have_selector('title', text: full_title("Following")) }
+      it { expect(page).to have_selector('h3', text: "Following") }
+      it { expect(page).to have_link(other_user.name, href: user_path(other_user)) }
+    end
+
+    describe "followers" do
+        before do
+         sign_in user
+         visit followers_user_path(user)
+      end
+      it { expect(page).to have_selector('title', text: full_title("Followers")) }
+      it { expect(page).to have_selector('h3', text: "Followers") }
+      it { expect(page).to have_link(user.name, href: user_path(user)) }
+    end
+
+  end
 
 end		
