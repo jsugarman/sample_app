@@ -48,7 +48,7 @@ describe "Authentication Pages" do
           before { sign_in user, no_capybara: true }
 
           describe "sign in" do
-            before {  get new_user_path }
+            before {  get signup_path }
             specify { expect(response).to redirect_to(root_url) } 
           end
 

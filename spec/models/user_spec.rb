@@ -227,5 +227,4 @@ describe User do
 
   end # end of following block
 
-
 end

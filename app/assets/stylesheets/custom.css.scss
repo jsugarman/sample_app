@@ -147,6 +147,14 @@ aside {
      }
 }
 
+.user_avatars {
+  overflow: auto;
+  margin-top: 10px;
+  .gravatar {
+    margin: 1px 1px;
+  }
+}
+
 /* microposts */
 
 .microposts {
@@ -175,7 +183,6 @@ aside {
     margin-bottom: 5px;
   }
 }
-
 .gravatar {
   float: left;
   margin-right: 10px;
@@ -223,6 +230,34 @@ input {
     }
   }
 }
+
+.stats {
+  overflow: auto;
+  a {
+    float: left;
+    padding: 0 10px;
+    border-left: 1px solid $grayLighter;
+    color: gray;
+    &:first-child {
+      padding-left: 0;
+      border: 0;
+    }
+    &:hover {
+      text-decoration: none;
+      color: $blue;
+    }
+  }
+  strong {
+    display: block;
+  }
+}
+
+/*table.stats-table td {
+  width: 100px;
+  text-align: left;
+  vertical-align: top;
+}
+*/
 
 /*micropost character countdown formatting*/
 table.posting-table td.countdown {

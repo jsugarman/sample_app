@@ -7,7 +7,10 @@
         <%= gravatar_for @user, { size: 100 } %>
         <%= @user.name %>
       </h1>
-    </section>  
+    </section> 
+    <section>
+      <%= render 'shared/stats' %>
+    </section>
   </aside>
 
   <div class="span8">

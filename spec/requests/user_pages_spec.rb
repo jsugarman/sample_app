@@ -51,11 +51,9 @@ describe 'Index Page' do
           click_link('delete', match: :first)
         end.to change(User, :count).by(-1)
       end
-      
       it 'should not be able to delete itself' do
         should_not have_link('delete', href: user_path(admin))
-      end
-      
+      end    
     end
 
   end
@@ -64,28 +62,33 @@ end
 
 # -----------------------------
 describe 'Profile Page' do 
-  
-	  #user = User.create(name: 'joel sugarman', email: 'whereverh@whatever.com', password: 'foobar', password_confirmation: 'foobar')
-	  let (:user) { FactoryGirl.create(:user) }
-    let!(:m1)   { FactoryGirl.create(:micropost, user: user, content: 'foo') }
-    let!(:m2)   { FactoryGirl.create(:micropost, user: user, content: 'bar') }
 
-    before { visit user_path(user) }
+  let(:user) { FactoryGirl.create(:user) }
+  let(:other_user) { FactoryGirl.create(:user) }
+  let!(:m1)   { FactoryGirl.create(:micropost, user: user, content: 'foo') }
+  let!(:m2)   { FactoryGirl.create(:micropost, user: user, content: 'bar') }
 
-    describe 'page' do
-      it { expect(page).to have_content(user.name) }
-      it { expect(page).to have_title(full_title(user.name)) }
-      it { expect(page).to have_selector('h1',   text: user.name) }
-    end
-
-    describe 'microposts' do
-
-      it { expect(page).to have_content(m1.content) }
-      it { expect(page).to have_content(m2.content) }
-      it { expect(page).to have_content(user.microposts.count) }
-    end
-
+  before do 
+    other_user.follow!(user)
+    visit user_path(user)
   end
+
+  describe 'page' do
+    it { expect(page).to have_content(user.name) }
+    it { expect(page).to have_title(full_title(user.name)) }
+    it { expect(page).to have_selector('h1',   text: user.name) }
+  end
+  describe 'microposts' do
+    it { expect(page).to have_content(m1.content) }
+    it { expect(page).to have_content(m2.content) }
+    it { expect(page).to have_content(user.microposts.count) }
+  end
+  describe "relationships" do      
+    it { expect(page).to have_link("1 followers", href: followers_user_path(user)) }
+    it { expect(page).to have_link("0 following", href: following_user_path(user)) }
+  end
+
+end
 
 # -----------------------------
 describe 'Signup Page' do
