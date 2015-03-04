@@ -8,9 +8,11 @@ NOTES: unless the profile page is that of the current user (in which case follow
 		end if
  -->
 <% unless current_user?(@user) %>
+	<div id="follow_form">
 	<% if current_user.following?(@user) %>
-		<%= render 'unfollow' %>
+		<%= render 'users/unfollow' %>
 	<% else %>
-		<%= render 'follow' %>
+		<%= render 'users/follow' %>
 	<% end%>
+	</div>
 <% end %>
