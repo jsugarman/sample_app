@@ -63,25 +63,70 @@ describe 'Profile Page' do
   let!(:m2)   { FactoryGirl.create(:micropost, user: user, content: 'bar') }
 
   before do 
-    other_user.follow!(user)
+    sign_in user
     visit user_path(user)
   end
 
   describe 'page' do
+    before do 
+      visit user_path(user)
+    end
     it { expect(page).to have_content(user.name) }
     it { expect(page).to have_title(full_title(user.name)) }
     it { expect(page).to have_selector('h1',   text: user.name) }
   end
   describe 'microposts' do
+    before do 
+      visit user_path(user)
+    end
     it { expect(page).to have_content(m1.content) }
     it { expect(page).to have_content(m2.content) }
     it { expect(page).to have_content(user.microposts.count) }
   end
-  describe "relationships" do      
+  describe "relationships" do 
+    before do
+      other_user.follow!(user)
+      sign_in user
+      visit user_path(user)
+    end     
     it { expect(page).to have_link("1 followers", href: followers_user_path(user)) }
     it { expect(page).to have_link("0 following", href: following_user_path(user)) }
   end
-
+  describe "follow button clicking" do
+      before do
+        sign_in user
+        visit user_path(other_user)
+      end
+      it "should increment users list of followed users" do
+        expect(click_button "Follow").to change(user.followed_users, :count).by(1) 
+      end
+      it "should increment other user\'s list of followers" do
+        expect(click_button "Follow").to change(other_user.followers, :count).by(1) 
+      end
+      describe "should toggle the button" do
+        before { click_button "Follow" }
+        # it { expect(page).to have_button('Unfollow') }
+        it { expect(page).to have_selector('input', value: 'Unfollow') }
+       end 
+  end
+  describe "unfollow button clicking" do
+      before do
+        user.follow!(other_user)
+        sign_in user
+        visit user_path(other_user)
+      end
+      it "should decrement users list of followed users" do
+        expect(click_button "Unfollow").to change(user.followed_users, :count).by(-1) 
+      end
+      it "should decrement other user\'s list of followers" do
+        expect(click_button "Unfollow").to change(other_user.followers, :count).by(-1) 
+      end
+      describe "should toggle the button" do
+        before { click_button "Unfollow" }
+        # it { expect(page).to have_button('Unfollow') }
+        it { expect(page).to have_selector('input', value: 'Follow') }
+       end 
+  end
 end
 
 # -----------------------------
@@ -192,17 +237,17 @@ describe 'Edit Page' do
          sign_in user
          visit following_user_path(user)
       end
-      it { expect(page).to have_selector('title', text: full_title("Following")) }
+      it { expect(page).to have_title(full_title("Following")) }
       it { expect(page).to have_selector('h3', text: "Following") }
       it { expect(page).to have_link(other_user.name, href: user_path(other_user)) }
     end
 
     describe "followers" do
         before do
-         sign_in user
-         visit followers_user_path(user)
+         sign_in other_user
+         visit followers_user_path(other_user)
       end
-      it { expect(page).to have_selector('title', text: full_title("Followers")) }
+      it { expect(page).to have_title(full_title("Followers")) }
       it { expect(page).to have_selector('h3', text: "Followers") }
       it { expect(page).to have_link(user.name, href: user_path(user)) }
     end
