@@ -98,15 +98,15 @@ describe 'Profile Page' do
         visit user_path(other_user)
       end
       it "should increment users list of followed users" do
-        expect(click_button "Follow").to change(user.followed_users, :count).by(1) 
+        expect{ click_button "Follow" }.to change(user.followed_users, :count).by(1) 
       end
       it "should increment other user\'s list of followers" do
-        expect(click_button "Follow").to change(other_user.followers, :count).by(1) 
+        expect{ click_button "Follow" }.to change(other_user.followers, :count).by(1) 
       end
       describe "should toggle the button" do
         before { click_button "Follow" }
-        # it { expect(page).to have_button('Unfollow') }
-        it { expect(page).to have_selector('input', value: 'Unfollow') }
+        it { expect(page).to have_button('Unfollow') }
+        # it { expect(page).to have_selector('input', value: 'Unfollow') }
        end 
   end
   describe "unfollow button clicking" do
@@ -116,15 +116,15 @@ describe 'Profile Page' do
         visit user_path(other_user)
       end
       it "should decrement users list of followed users" do
-        expect(click_button "Unfollow").to change(user.followed_users, :count).by(-1) 
+        expect{ click_button "Unfollow" }.to change(user.followed_users, :count).by(-1) 
       end
       it "should decrement other user\'s list of followers" do
-        expect(click_button "Unfollow").to change(other_user.followers, :count).by(-1) 
+        expect{ click_button "Unfollow" }.to change(other_user.followers, :count).by(-1) 
       end
       describe "should toggle the button" do
         before { click_button "Unfollow" }
-        # it { expect(page).to have_button('Unfollow') }
-        it { expect(page).to have_selector('input', value: 'Follow') }
+        it { expect(page).to have_button('Follow') }
+        # it { expect(page).to have_selector('input', value: 'Follow') }
        end 
   end
 end
