@@ -47,7 +47,8 @@ class User < ActiveRecord::Base
 
 	def feed
 		# This is preliminary - TBC
-		Micropost.where("user_id = ?",id).order(created_at:  :desc)
+		# Micropost.where("user_id = ?",id).order(created_at:  :desc)
+		Micropost.user_feed(self)
 	end
 
 	def follow!(other_user)

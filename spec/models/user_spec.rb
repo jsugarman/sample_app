@@ -163,28 +163,36 @@ describe User do
       end
     end
 
-    describe "feed" do
-      let(:unfollowed_micropost) { FactoryGirl.create(:micropost, user: FactoryGirl.create(:user)) }
-     
-      it "should include older micropost" do
-        expect(@user.feed).to include(older_micropost) 
+    describe "should include feeds" do
+      context "from user" do
+        let(:unfollowed_micropost) { FactoryGirl.create(:micropost, user: FactoryGirl.create(:user)) }
+        it "should include older micropost" do
+          expect(@user.feed).to include(older_micropost) 
+        end
+        it "should include newer micropost" do 
+           expect(@user.feed).to include(newer_micropost)
+        end
+        it "should NOT include unfollowed micropost" do 
+           expect(@user.feed).not_to include(unfollowed_micropost)
+        end
+        it "match the order latest to oldest" do 
+           expect(@user.feed).to match_array([newer_micropost,older_micropost])
+        end
       end
-      it "should include newer micropost" do 
-         expect(@user.feed).to include(newer_micropost)
+      context "from other users" do
+        let(:followed_user) { FactoryGirl.create(:user) }
+        before do
+          @user.follow!(followed_user)
+          3.times do |i|
+            followed_user.microposts.create!(content: "lorem imspum - order #{i.to_s}")
+          end
+        end
+        it "should include microposts from followed users" do 
+          followed_user.microposts.each { |m| expect(@user.feed).to include(m) } 
+        end
       end
-      it "should NOT include unfollowed micropost" do 
-         expect(@user.feed).not_to include(unfollowed_micropost)
-      end
-      it "match the order latest to oldest" do 
-         expect(@user.feed).to match_array([newer_micropost,older_micropost])
-      end
-      # 
-      # from tutorial
-      # 
-      # its(:feed) { should include(newer_micropost) }
-      # its(:feed) { should include(older_micropost) }
-      # its(:feed) { should_not include(unfollowed_micropost) }
-    end
+    end # end of feed block 
+
   end # end of microposts associations block
 
   describe "Following" do

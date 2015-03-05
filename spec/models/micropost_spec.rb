@@ -5,6 +5,11 @@ describe Micropost do
 	# pending "add some examples to (or delete) #{__FILE__}"
 
 	let (:user) { FactoryGirl.create(:user) }
+
+	it "has a valid factory" do
+  		FactoryGirl.build(:micropost, user: user).should be_valid
+  	end
+	
 	before do
 
 		# @micropost = Micropost.new(content: "lorem ipsum", user_id: user.id)

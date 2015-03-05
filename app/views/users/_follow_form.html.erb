@@ -1,12 +1,4 @@
-<!-- 
-NOTES: unless the profile page is that of the current user (in which case following does not apply) then 
-		we need to render a follow button or an unfollow button conditionally
-		if current signed in user is following the user profile being viewed then 
-			render unfollow
-		else
-			render follow button
-		end if
- -->
+
 <% unless current_user?(@user) %>
 	<div id="follow_form">
 	<% if current_user.following?(@user) %>
