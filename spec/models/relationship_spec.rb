@@ -41,5 +41,5 @@ describe Relationship do
 		before { relationship.followed_id = nil }
 		it { expect(relationship).not_to be_valid }
 	end
-
+	
 end
