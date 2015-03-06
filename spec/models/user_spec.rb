@@ -163,6 +163,42 @@ describe User do
       end
     end
 
+    describe "relationship associations" do
+      # 
+      # create some relationships
+      # 
+      let(:other_user) { FactoryGirl.create(:user) }
+      before do
+        @user.save
+        @user.follow!(other_user)
+        other_user.follow!(@user)
+      end
+
+      it "when delete user cascade followed_user relationships" do
+        # following
+        active_relationships = @user.relationships.dup  
+        # followers
+        # passive_relationships = @user.reverse_relationships.dup
+        @user.destroy
+
+        active_relationships.each do |r|
+          expect(Relationship.find_by_id(r)).to be_nil
+        end
+      end
+  
+      it "when delete user cascade follower relationships" do
+          # following
+          passive_relationships = @user.reverse_relationships.dup  
+          # followers
+          # passive_relationships = @user.reverse_relationships.dup
+          @user.destroy
+
+          passive_relationships.each do |r|
+            expect(Relationship.find_by_id(r)).to be_nil
+          end
+        end
+    end
+
     describe "should include feeds" do
       context "from user" do
         let(:unfollowed_micropost) { FactoryGirl.create(:micropost, user: FactoryGirl.create(:user)) }
