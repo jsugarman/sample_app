@@ -5,8 +5,10 @@
 		*
 	<% end %>
 	<% if current_user.admin? && !current_user?(user) %>
+    <span class="delete-link">
      <%= link_to "delete", user, method: :delete,
                                   data: { confirm: "You sure?" } %>
+	</span>                                  
   	<% end %>
   	
 

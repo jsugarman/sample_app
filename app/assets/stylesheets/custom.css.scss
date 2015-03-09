@@ -252,12 +252,14 @@ input {
   }
 }
 
-/*table.stats-table td {
-  width: 100px;
-  text-align: left;
-  vertical-align: top;
+.delete-link {
+    float: right;
+    a {
+    &:hover {
+      color: $red;
+    }
+  }
 }
-*/
 
 /*micropost character countdown formatting*/
 table.posting-table td.countdown {

@@ -177,8 +177,6 @@ describe User do
       it "when delete user cascade followed_user relationships" do
         # following
         active_relationships = @user.relationships.dup  
-        # followers
-        # passive_relationships = @user.reverse_relationships.dup
         @user.destroy
 
         active_relationships.each do |r|
@@ -187,10 +185,8 @@ describe User do
       end
   
       it "when delete user cascade follower relationships" do
-          # following
+          # follower
           passive_relationships = @user.reverse_relationships.dup  
-          # followers
-          # passive_relationships = @user.reverse_relationships.dup
           @user.destroy
 
           passive_relationships.each do |r|

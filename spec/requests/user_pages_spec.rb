@@ -14,8 +14,8 @@ describe 'Index Page' do
   end
 
   describe 'page' do
-    it { should have_title('All users') }
-    it { should have_content('All users') }
+    it { should have_title('All Users') }
+    it { should have_content('All Users') }
   end
 
   describe 'pagination' do
@@ -106,7 +106,6 @@ describe 'Profile Page' do
       describe "should toggle the button" do
         before { click_button "Follow" }
         it { expect(page).to have_button('Unfollow') }
-        # it { expect(page).to have_selector('input', value: 'Unfollow') }
        end 
   end
   describe "unfollow button clicking" do
@@ -124,7 +123,6 @@ describe 'Profile Page' do
       describe "should toggle the button" do
         before { click_button "Unfollow" }
         it { expect(page).to have_button('Follow') }
-        # it { expect(page).to have_selector('input', value: 'Follow') }
        end 
   end
 end
