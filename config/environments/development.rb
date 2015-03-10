@@ -28,10 +28,10 @@ SampleApp::Application.configure do
   config.action_mailer.smtp_settings = {
    :address              => "smtp.gmail.com",
    :port                 => 587,
-   :user_name            => 'rortestmailer@gmail.com',
-   :password             => 'Evid3nce',
+   :user_name            => ENV['dev_mailer_username'],
+   :password             => ENV['dev_mailer_password'],
    :authentication       => "plain",
-  :enable_starttls_auto => true
+   :enable_starttls_auto => true
   }
 
   # Print deprecation notices to the Rails logger.
