@@ -151,25 +151,35 @@ describe 'Signup Page' do
      it { should have_content('error') }
      it { should have_error_message('error')}
    end
- end
-
- describe 'with valid information' do
-  before { valid_signup }
-
-  it 'should create a user' do
-    expect { click_button submit }.to change(User, :count).by(1)
   end
 
-  describe 'after submission' do
-   before { click_button submit }
-   let(:user) { User.find_by(email: 'user@example.com') }
+  describe 'with valid information' do
+    before { valid_signup }
 
-   it { should have_link('Sign out') }
-   it { should have_title(user.name) }
-   it { should have_success_message('Welcome') }
- end
-end
-end
+    it 'should create a user' do
+      expect { click_button submit }.to change(User, :count).by(1)
+    end
+
+    it "should send an email" do
+      expect{ click_button submit }.to change{ActionMailer::Base.deliveries.count}.by(1)
+    end
+
+    describe 'after submission' do
+       before { click_button submit }
+       let(:user) { User.find_by(email: 'user@example.com') }
+
+       it { should have_link('Sign out') }
+       it { should have_title(user.name) }
+       it { should have_success_message('Welcome') }
+
+       it "should have a resend-confirmation button" do 
+          pending "needs implementing" 
+          expect(page).to have_button('resend confirmation') 
+        end
+    end
+  end
+
+end # end of signup block
 # -----------------------------
 describe 'Edit Page' do
   let(:user) { FactoryGirl.create(:user) }
@@ -186,7 +196,6 @@ describe 'Edit Page' do
 
   describe 'with invalid information' do
     before { click_button 'Save changes' }
-
     it { should have_error_message('error')}
   end
 

@@ -20,6 +20,12 @@ SampleApp::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  # 
+  # actionmailer settings added by jsugarman
+  #  i.e. add mail to ActionMailer::Base.deliveries array
+  # 
+  config.action_mailer.delivery_method = :test
+
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
 

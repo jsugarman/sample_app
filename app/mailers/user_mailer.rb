@@ -1,9 +1,12 @@
 class UserMailer < ActionMailer::Base
+
+	include ApplicationHelper
+
 	default :from => "rortestmailer@gmail.com"
 
 	def registration_confirmation(user)
 		@user = user
-		mail(:to => user.email, :subject => "Sample App Registration Confirmation" )
+		mail(:to => "#{user.name} <#{user.email}>", :subject => full_title("Registration Confirmation for #{user.name}"))
 	end
 
 end

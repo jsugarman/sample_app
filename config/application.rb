@@ -28,5 +28,10 @@ module SampleApp
     #added for asset pipeline compatability
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
 
+    # 
+    # for use in urls used in mail templates (e.g. edit_user_url )
+    # 
+    config.action_mailer.default_url_options = { host: 'localhost:3000' }
+
   end
 end
