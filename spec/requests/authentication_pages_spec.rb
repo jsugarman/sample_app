@@ -12,6 +12,11 @@ describe "Authentication Pages" do
       it { should have_title('Sign in') }
       it { should have_link('Sign in',     href: signin_path) }
 
+
+      it "should render a captcha" do
+        pending "to be implemented  using RMagick?!"
+      end
+
       describe "with invalid information" do
           before { click_button "Sign in" }
 
@@ -27,7 +32,6 @@ describe "Authentication Pages" do
       describe "with valid information" do
         let(:user) { FactoryGirl.create(:user) }
         before { sign_in(user) }
-
 
         it { should have_title(user.name) }
         it { should have_link('Users',       href: users_path) }

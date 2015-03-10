@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
 
+	attr_accessor :activation_token
+
 	#bcrypt-ruby Gem add-in method
 	has_secure_password
 
@@ -20,6 +22,7 @@ class User < ActiveRecord::Base
 	before_save{ self.email.downcase! }
 
 	before_create :create_remember_token
+	before_create :create_activation_digest
 
 	validates 	:name,
 				presence: true,
@@ -37,7 +40,7 @@ class User < ActiveRecord::Base
 				# presence: { on: create }
 
 		
-	def User.new_remember_token
+	def User.new_token
 		return SecureRandom.urlsafe_base64
 	end
 
@@ -64,13 +67,17 @@ class User < ActiveRecord::Base
 		self.relationships.find_by_followed_id(other_user.id)
 	end
 
-
 private
-
 
 	def create_remember_token
 		# create secure token for permananet signin between sessions
-		self.remember_token = User.digest(User.new_remember_token)
+		# self.remember_token = User.digest(User.new_token) # removed as has been erroneous for some time
+		self.remember_token = User.new_token
+	end
+
+	def create_activation_digest
+		self.activation_token = User.new_token
+		self.activation_digest = User.digest(activation_token)
 	end
 
 end

@@ -139,6 +139,11 @@ describe 'Signup Page' do
 
   let(:submit) { 'Create my account' }
 
+  it "should render a captcha" do
+    pending "to be implemented  using RMagick?!"
+  end
+
+
   describe 'with invalid information' do
     it 'should not create a user' do
       expect { click_button submit }.not_to change(User, :count)
@@ -233,7 +238,6 @@ describe 'Edit Page' do
 
   end
   # -----------------------------
-
   describe "Following/Followers Pages" do
     let(:user) { FactoryGirl.create(:user) }
     let(:other_user) { FactoryGirl.create(:user) }
