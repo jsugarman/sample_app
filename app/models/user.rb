@@ -48,6 +48,17 @@ class User < ActiveRecord::Base
 		return Digest::SHA1.hexdigest(token.to_s)
 	end
 
+	def authenticated?(token)
+		digest = self.activation_digest
+		return false if digest.nil?
+		return (self.digest(token) == digest) 
+		# if (self.digest(token) == digest) 
+		# 	return true
+		# else
+		# 	return false
+		# end
+	end
+
 	def feed
 		# This is preliminary - TBC
 		# Micropost.where("user_id = ?",id).order(created_at:  :desc)
