@@ -36,11 +36,9 @@ class UsersController < ApplicationController
 		if @user.save
 			# UserMailer.registration_confirmation(@user).deliver
 			UserMailer.account_activation(@user).deliver
-			flash[:info] = "Please check your email (#{ @user.email }) to activate your account."
+			flash[:info] = "Please check your email (i.e. #{ @user.email }) to activate your account."
+			# TODO add resend button to flash
 			redirect_to root_url
-			# sign_in @user
-			# flash[:success] = "Welcome to the Sample App! registration confirmation sent - resend?"
-			# redirect_to @user
 		else
 			render 'new'
 		end

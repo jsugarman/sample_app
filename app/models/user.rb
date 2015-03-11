@@ -48,20 +48,15 @@ class User < ActiveRecord::Base
 		return Digest::SHA1.hexdigest(token.to_s)
 	end
 
-	def authenticated?(token)
-		digest = self.activation_digest
-		return false if digest.nil?
-		return (self.digest(token) == digest) 
-		# if (self.digest(token) == digest) 
-		# 	return true
-		# else
-		# 	return false
-		# end
+	def authenticated?(activation_token)
+		if self.activation_digest.nil?
+			return false
+		else
+			return User.digest(activation_token) == self.activation_digest
+		end
 	end
 
 	def feed
-		# This is preliminary - TBC
-		# Micropost.where("user_id = ?",id).order(created_at:  :desc)
 		Micropost.user_feed(self)
 	end
 
@@ -82,7 +77,6 @@ private
 
 	def create_remember_token
 		# create secure token for permananet signin between sessions
-		# self.remember_token = User.digest(User.new_token) # removed as has been erroneous for some time
 		self.remember_token = User.new_token
 	end
 

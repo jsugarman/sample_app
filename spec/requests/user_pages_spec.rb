@@ -159,7 +159,10 @@ describe 'Signup Page' do
   end
 
   describe 'with valid information' do
-    before { valid_signup }
+    before do
+      ActionMailer::Base.deliveries.clear
+      valid_signup 
+    end
 
     it 'should create a user' do
       expect { click_button submit }.to change(User, :count).by(1)
@@ -172,17 +175,8 @@ describe 'Signup Page' do
     describe 'after submission' do
        before { click_button submit }
        let(:user) { User.find_by(email: 'user@example.com') }
-
-
-       xit { should have_link('Sign out') }
-       xit { should have_title(user.name) }
-       xit { should have_success_message('Welcome') }
-
-
-       it "should have a resend-confirmation button" do 
-          pending "needs implementing" 
-          expect(page).to have_button('resend confirmation') 
-        end
+       it { expect(page).to have_content("(i.e. #{ user.email })") }
+       it { expect(page).to have_info_message('activate') }
     end
   end
 

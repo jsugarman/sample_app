@@ -1,18 +1,19 @@
 class AccountActivationsController < ApplicationController
 
-
 	def edit
-		# find the 
 		user = User.find_by(email: params[:email])
-		token = params[:id]
-		if user.activation_digest = User.digest(token)
+		activation_token = params[:id]
+		if user  \
+		and user.authenticated?(activation_token) \
+		and not user.activated?		
+			then 
 			user.update_attribute(:activated, true)
 			user.update_attribute(:activated_at, Time.zone.now)
 			sign_in user
 			flash[:success] = "Activation Succeeded!"
 			redirect_to user
 		else 
-			flash[:failure] = "Error: invalid Activation token"
+			flash[:failure] = "Activation Failed - invalid user, activation token or already activated!"
 			redirect_to root_url
 		end
 

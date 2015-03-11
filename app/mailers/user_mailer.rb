@@ -9,7 +9,6 @@ class UserMailer < ActionMailer::Base
 		mail(:to => "#{user.name} <#{user.email}>", :subject => full_title("Registration Confirmation for #{user.name}"))
 	end
 
-
 	def account_activation(user)
 		@user = user
 		# @user.activation_token = User.new_token

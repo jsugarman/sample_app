@@ -12,7 +12,6 @@ describe "Authentication Pages" do
       it { should have_title('Sign in') }
       it { should have_link('Sign in',     href: signin_path) }
 
-
       it "should render a captcha" do
         pending "to be implemented  using RMagick?!"
       end
@@ -27,6 +26,15 @@ describe "Authentication Pages" do
       		  before { click_link "Home" }
             it { should_not have_error_message('Invalid') }
       	  end
+      end
+
+      describe "with unactivated account information" do
+        let(:unactivated_user) { FactoryGirl.create(:user, activated: false, activated_at: '') }
+        before { sign_in unactivated_user }
+        it { expect(page).to have_content('Sign in') }
+        it { expect(page).to have_content('Account not activated') }
+        it { expect(page).to have_failure_message('not activated') }
+        it { expect(page).to have_link('Sign in', href: signin_path) }
       end
 
       describe "with valid information" do
@@ -84,11 +92,8 @@ describe "Authentication Pages" do
         describe "when attempting to visit a protected page" do
             before do
               visit edit_user_path(user)
-              fill_in "Email",    with: user.email
-              fill_in "Password", with: user.password
-              click_button "Sign in"
+              valid_signin(user) 
             end
-
             describe "after signing in" do
               it "should render the desired protected page" do
                 expect(page).to have_title('Edit user')
@@ -102,24 +107,20 @@ describe "Authentication Pages" do
             before { visit edit_user_path(user) }
             specify { expect(page).to have_title('Sign in') }
           end
-
           describe "submitting to the update action" do
             before { patch user_path(user) }
             specify { expect(response).to redirect_to(signin_path) }
           end
-
           describe "visiting the user index" do
             before { visit users_path }
             specify { expect(page).to have_title('Sign in') }
           end
-
           describe "visiting the following page" do
             before { visit following_user_path(user) }
             specify { expect(page).to have_title('Sign in') }
             # it { expect(page).to have_selector('title', text: 'Sign in') } /fails??
             # specify { expect(response).to redirect_to(signin_path) }  //fails??
           end  
-
           describe "visiting the followers page" do
             before { visit followers_user_path(user) }
             specify { expect(page).to have_title('Sign in') }
@@ -134,7 +135,6 @@ describe "Authentication Pages" do
             before { post microposts_path }
             specify { expect(response).to redirect_to(signin_path)}
           end
-
           describe "submitting to the destroy action" do
             before { delete micropost_path(FactoryGirl.create(:micropost)) }
             specify { expect(response).to redirect_to(signin_path)}
@@ -165,33 +165,26 @@ describe "Authentication Pages" do
         specify { expect(response.body).not_to match(full_title('Edit user')) }
         specify { expect(response).to redirect_to(root_url) }
       end
-
       describe "submitting a PATCH request to the Users#update action" do
         before { patch user_path(wrong_user) }
         specify { expect(response).to redirect_to(root_url) }
       end
-
     end
 
     describe "as admin user" do
-
       let (:admin) { FactoryGirl.create(:admin) }
       before { sign_in admin, no_capybara: true }
-
       describe "submitting a DELETE request to the users#destroy action for themselves" do
           specify { expect { delete user_path(admin) }.to_not change(User, :count).by(-1) }
           before { delete user_path(admin) }
           specify { expect(response).to redirect_to(users_path) }
       end
-
     end
 
     describe "as non-admin user" do
       let(:user) { FactoryGirl.create(:user) }
       let(:non_admin) { FactoryGirl.create(:user) }
-
       before { sign_in non_admin, no_capybara: true }
-
       describe "submitting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }
         specify { expect(response).to redirect_to(root_url) }

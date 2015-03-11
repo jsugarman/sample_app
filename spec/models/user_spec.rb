@@ -33,11 +33,8 @@ describe User do
   it { should respond_to(:activation_digest) } 
   it { should respond_to(:activation_token) } 
   it { should respond_to(:activated_at) } 
-
-
   it { should be_valid }
   it { should_not be_admin }
-
 
   describe "with admin attribute set to 'true'" do
     before do
@@ -145,6 +142,7 @@ describe User do
     its(:remember_token) { should_not be_blank }
   end
 
+  # -----------------------------------
   describe "micropost associations" do
     before { @user.save }
     
@@ -231,6 +229,7 @@ describe User do
 
   end # end of microposts associations block
 
+  # -----------------------------------
   describe "Following" do
     let(:other_user) { FactoryGirl.create(:user) }
     before do
@@ -269,7 +268,21 @@ describe User do
       end
     end
 
-  end # end of following block
+  end # end of Following block
+
+  # -----------------------------------
+  describe "Activation" do
+    it "should not authenticate nil token" do
+      expect(@user.authenticated?('')).to be false
+    end    
+    it "should not authenticate random token" do
+      expect(@user.authenticated?(User.new_token)).to be false
+    end    
+    it "should authenticate valid token" do
+      pending "not currently working"
+      expect(@user.authenticated?(@user.activation_token)).to be true
+    end    
+  end # end of Activation block
 
 
 end
