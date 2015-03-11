@@ -73,6 +73,16 @@ class User < ActiveRecord::Base
 		self.relationships.find_by_followed_id(other_user.id)
 	end
 
+	def activate
+		self.update_attribute(:activated, true)
+		self.update_attribute(:activated_at, Time.zone.now)
+	end
+
+	def send_activation_email
+		UserMailer.account_activation(self).deliver
+	end
+
+
 private
 
 	def create_remember_token

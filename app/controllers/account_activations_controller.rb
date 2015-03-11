@@ -7,13 +7,12 @@ class AccountActivationsController < ApplicationController
 		and user.authenticated?(activation_token) \
 		and not user.activated?		
 			then 
-			user.update_attribute(:activated, true)
-			user.update_attribute(:activated_at, Time.zone.now)
+			user.activate
 			sign_in user
-			flash[:success] = "Activation Succeeded!"
+			flash[:success] = "Account activated!"
 			redirect_to user
 		else 
-			flash[:failure] = "Activation Failed - invalid user, activation token or already activated!"
+			flash[:dnager] = "Activation Failed - invalid user, activation token or already activated!"
 			redirect_to root_url
 		end
 
