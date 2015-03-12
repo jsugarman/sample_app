@@ -1,5 +1,4 @@
 
-
 include ApplicationHelper
 
 def valid_signin(user)
@@ -33,17 +32,32 @@ RSpec::Matchers.define :have_message do |sub_selector, message|
   end
 end
 
-RSpec::Matchers.define :have_error_message do |message|
-	match do |page|
-	  expect(page).to have_selector('div.alert.alert-error', text: message)
-	end
+RSpec::Matchers.define :redirect_to_signin do 
+  match do |response|
+    expect(response).to redirect_to(signin_path)
+  end
 end
 
-# RSpec::Matchers.define :have_success_message do |message|
-# 	match do |page|
-# 	  expect(page).to have_selector('div.alert.alert-success', text: message)
-# 	end
+RSpec::Matchers.define :redirect_to_root do 
+  match do |response|
+    expect(response).to redirect_to(root_url)
+  end
+end
+
+# 
+# REMOVED all theses to avoid repetition see have_message matcher above. jsugarman
+# 
+# RSpec::Matchers.define :have_error_message do |message|
+#   match do |page|
+#     expect(page).to have_selector('div.alert.alert-error', text: message)
+#   end
 # end
+
+RSpec::Matchers.define :have_success_message do |message|
+	match do |page|
+	  expect(page).to have_selector('div.alert.alert-success', text: message)
+	end
+end
 
 # RSpec::Matchers.define :have_info_message do |message|
 #   match do |page|

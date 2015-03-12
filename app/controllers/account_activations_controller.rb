@@ -9,10 +9,10 @@ class AccountActivationsController < ApplicationController
 			then 
 			user.activate
 			sign_in user
-			flash[:success] = "Account activated!"
-			redirect_to user
+			flash[:success] = "Account activated!"			
+			redirect_to user			
 		else 
-			flash[:dnager] = "Activation Failed - invalid user, activation token or already activated!"
+			flash[:danger] = "Activation Failed - invalid user, invalid token or already activated!"
 			redirect_to root_url
 		end
 

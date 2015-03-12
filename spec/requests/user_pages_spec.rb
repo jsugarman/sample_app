@@ -197,7 +197,7 @@ describe 'Edit Page' do
 
   describe 'with invalid information' do
     before { click_button 'Save changes' }
-    it { should have_error_message('error')}
+    it { expect(page).to have_message('error','error')}
   end
 
   describe 'with valid information' do
