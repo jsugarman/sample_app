@@ -194,7 +194,7 @@ describe "Authentication Pages" do
       # rspec-rails checks - for response redirects
       # 
       describe "GET the edit_account_activation path" do
-        describe "with invalid activation token"  do
+        describe "with INVALID activation token"  do
           before { get edit_account_activation_path(id: User.new_token, email: unactivated_user.email) }
           it { expect(response).to redirect_to_root }
         end              
