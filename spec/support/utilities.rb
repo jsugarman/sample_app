@@ -27,26 +27,38 @@ def valid_signup
 	fill_in "Confirm Password", with: "foobar"
 end
 
+RSpec::Matchers.define :have_message do |sub_selector, message|
+  match do |page|
+    expect(page).to have_selector("div.alert.alert-#{sub_selector}", text: message)
+  end
+end
+
 RSpec::Matchers.define :have_error_message do |message|
 	match do |page|
 	  expect(page).to have_selector('div.alert.alert-error', text: message)
 	end
 end
 
-RSpec::Matchers.define :have_success_message do |message|
-	match do |page|
-	  expect(page).to have_selector('div.alert.alert-success', text: message)
-	end
-end
+# RSpec::Matchers.define :have_success_message do |message|
+# 	match do |page|
+# 	  expect(page).to have_selector('div.alert.alert-success', text: message)
+# 	end
+# end
 
-RSpec::Matchers.define :have_info_message do |message|
-  match do |page|
-    expect(page).to have_selector('div.alert.alert-info', text: message)
-  end
-end
+# RSpec::Matchers.define :have_info_message do |message|
+#   match do |page|
+#     expect(page).to have_selector('div.alert.alert-info', text: message)
+#   end
+# end
 
-RSpec::Matchers.define :have_failure_message do |message|
-  match do |page|
-    expect(page).to have_selector('div.alert.alert-failure', text: message)
-  end
-end
+# RSpec::Matchers.define :have_failure_message do |message|
+#   match do |page|
+#     expect(page).to have_selector('div.alert.alert-failure', text: message)
+#   end
+# end
+
+# RSpec::Matchers.define :have_danger_message do |message|
+#   match do |page|
+#     expect(page).to have_selector('div.alert.alert-danger', text: message)
+#   end
+# end

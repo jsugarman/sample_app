@@ -154,7 +154,7 @@ describe 'Signup Page' do
      
      it { should have_title('Sign up') }
      it { should have_content('error') }
-     it { should have_error_message('error')}
+     it { should have_message('error','error')}
    end
   end
 
@@ -176,7 +176,7 @@ describe 'Signup Page' do
        before { click_button submit }
        let(:user) { User.find_by(email: 'user@example.com') }
        it { expect(page).to have_content("(i.e. #{ user.email })") }
-       it { expect(page).to have_info_message('activate') }
+       it { expect(page).to have_message('info','activate') }
     end
   end
 

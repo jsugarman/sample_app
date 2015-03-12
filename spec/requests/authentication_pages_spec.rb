@@ -8,9 +8,9 @@ describe "Authentication Pages" do
     
       before { visit signin_path }
 
-      it { should have_content('Sign in') }
-      it { should have_title('Sign in') }
-      it { should have_link('Sign in',     href: signin_path) }
+      it { expect(page).to have_content('Sign in') }
+      it { expect(page).to have_title('Sign in') }
+      it { expect(page).to have_link('Sign in',     href: signin_path) }
 
       it "should render a captcha" do
         pending "to be implemented  using RMagick?!"
@@ -19,12 +19,12 @@ describe "Authentication Pages" do
       describe "with invalid information" do
           before { click_button "Sign in" }
 
-          it { should have_title('Sign in') }
-          it { should have_error_message('Invalid') }
+          it { expect(page).to have_title('Sign in') }
+          it { expect(page).to have_message('error','Invalid') }
 
       	  describe "after visiting another page" do
       		  before { click_link "Home" }
-            it { should_not have_error_message('Invalid') }
+            it { expect(page).to_not have_message('error','Invalid') }
       	  end
       end
 
@@ -33,7 +33,7 @@ describe "Authentication Pages" do
         before { sign_in unactivated_user }
         it { expect(page).to have_content('Sign in') }
         it { expect(page).to have_content('Account not activated') }
-        it { expect(page).to have_failure_message('not activated') }
+        it { expect(page).to have_message('failure','not activated') }
         it { expect(page).to have_link('Sign in', href: signin_path) }
       end
 
@@ -41,16 +41,16 @@ describe "Authentication Pages" do
         let(:user) { FactoryGirl.create(:user) }
         before { sign_in(user) }
 
-        it { should have_title(user.name) }
-        it { should have_link('Users',       href: users_path) }
-        it { should have_link('Profile',     href: user_path(user)) }
-        it { should have_link('Settings',    href: edit_user_path(user)) }
-        it { should have_link('Sign out',    href: signout_path) }
-        it { should_not have_link('Sign in', href: signin_path) }
+        it { expect(page).to have_title(user.name) }
+        it { expect(page).to have_link('Users',       href: users_path) }
+        it { expect(page).to have_link('Profile',     href: user_path(user)) }
+        it { expect(page).to have_link('Settings',    href: edit_user_path(user)) }
+        it { expect(page).to have_link('Sign out',    href: signout_path) }
+        it { expect(page).to_not have_link('Sign in', href: signin_path) }
       
         describe "followed by signout" do
           before { click_link "Sign out" }
-          it { should have_link('Sign in') }
+          it { expect(page).to have_link('Sign in') }
         end
 
       end
@@ -83,11 +83,11 @@ describe "Authentication Pages" do
 
         let(:user) { FactoryGirl.create(:user) }
 
-        it { should_not have_title(user.name) }
-        it { should_not have_link('Users',       href: users_path) }
-        it { should_not have_link('Profile',     href: user_path(user)) }
-        it { should_not have_link('Settings',    href: edit_user_path(user)) }
-        it { should_not have_link('Sign out',    href: signout_path) }
+        it { expect(page).to_not have_title(user.name) }
+        it { expect(page).to_not have_link('Users',       href: users_path) }
+        it { expect(page).to_not have_link('Profile',     href: user_path(user)) }
+        it { expect(page).to_not have_link('Settings',    href: edit_user_path(user)) }
+        it { expect(page).to_not have_link('Sign out',    href: signout_path) }
 
         describe "when attempting to visit a protected page" do
             before do
