@@ -1,6 +1,11 @@
 class User < ActiveRecord::Base
 
-	attr_accessor :activation_token
+	attr_accessor :activation_token, :reset_token
+
+	# hooks
+	before_save{ self.email.downcase! }
+	before_create :create_remember_token
+	before_create :create_activation_digest
 
 	#bcrypt-ruby Gem add-in method
 	has_secure_password
@@ -18,11 +23,6 @@ class User < ActiveRecord::Base
 	has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
 	has_many :followers, through: :reverse_relationships, source: :follower
 
-	#before insert,update,delete triggers
-	before_save{ self.email.downcase! }
-
-	before_create :create_remember_token
-	before_create :create_activation_digest
 
 	validates 	:name,
 				presence: true,
@@ -38,7 +38,6 @@ class User < ActiveRecord::Base
 	validates	:password,
 				length: { minimum: 6}
 				# presence: { on: create }
-
 		
 	def User.new_token
 		return SecureRandom.urlsafe_base64
@@ -80,6 +79,16 @@ class User < ActiveRecord::Base
 
 	def send_activation_email
 		UserMailer.account_activation(self).deliver
+	end
+
+	def send_password_reset_email
+		UserMailer.password_reset(self).deliver
+	end
+
+	def create_reset_digest
+		self.reset_token = User.new_token
+		self.update_attribute(:reset_digest, User.digest(self.reset_token))
+		self.update_attribute(:reset_sent_at, Time.zone.now)
 	end
 
 

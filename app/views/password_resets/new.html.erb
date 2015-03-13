@@ -1,0 +1,16 @@
+<% provide(:title, @title) %>
+<h1><%= @title %></h1>
+
+
+<div class="row">
+  	<div class="span6 offset3">
+	<%= form_for(:password_resets, url: password_resets_path) do |f| %>
+
+		<%= f.label :email %>
+		<%= f.email_field :email, class: "form-control" %>	
+
+		<%= f.submit "Submit reset request", class: "btn btn-large btn-primary", style: "width: 100%;" %>
+
+		<% end %>
+	</div>
+</div>

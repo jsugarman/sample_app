@@ -13,22 +13,22 @@
   
         <table style="width: 100%;">
         <tr>
-          <td style="width: 2%; padding-bottom: 10px;">
-          <%= check_box_tag :remember_me, 1, params[:remember_me] %>
+          <td style="width: 50%;">
+            <%= label_tag :remember_me , class: "checkbox inline" do %>
+              <%= check_box_tag :remember_me, 1, params[:remember_me] %>
+              <span>remember me on this computer</span>
+            <% end %>
           </td>
-          <td style="width: 28%; padding-top: 5px; padding-left: 5px;">
-          <%= label_tag :remember_me %>
-          </td>
-          <td style="width: 70%;  text-align: right;">
-           <a href="#">forgotten password? (placeholder)</a>
-           <%# TODO = link_to "forgotten password?", new_password_reset_path %>
+          <td style="width: 50%; text-align: right; padding-top: 7px;">
+            <%= link_to "forgotten password", new_password_reset_path %>
           </td>
         </tr>
         </table>
 
         <!-- TODO should render a captcha -->
+        <br>
         
-        <%= submit_tag "Sign in", class: "btn btn-large btn-primary"  %>
+        <%= submit_tag "Sign in", class: "btn btn-large btn-primary", style: "width:100%;"  %>
       
     <% end %>
 
