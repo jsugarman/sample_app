@@ -1,0 +1,23 @@
+<%= form_for(@user, url: password_reset_path(@user)) do |f| %>
+
+		<%= render 'shared/error_messages', object: f.object %>
+
+		<%= f.label :password %>
+		<%= f.password_field :password, class: "form-control" %>
+
+		<%= f.label :password_confirmation, "Confirm Password" %>
+		<%= f.password_field :password_confirmation, class: "form-control" %>
+
+		<%= f.submit "Submit reset request", class: "btn btn-large btn-primary", style: "width: 100%;" %>
+
+		<% end %>
+
+		password reset form
+
+	<%= @user.name   %>
+	has just attenmpted to connect to the path using token
+	<%= @user.reset_token.nil? ? 'null' : @user.reset_token  %> which corresponds to the digest
+	<%= @user.reset_token.nil? ? 'null' : User.digest(@user.reset_token)  %>
+
+	the existing digest on the db for this user is
+	<%= @user.reset_digest.nil? ? 'null ' : @user.reset_digest %>

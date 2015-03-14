@@ -30,34 +30,38 @@ class PasswordResetsController < ApplicationController
 	# 
 	def edit
 		@title = "Reset Password"
-		@user = User.find_by(email: params[:email])
+		reset_token = params[:id]
+		@user = User.find_by(reset_digest: User.digest(reset_token)) # this authenticates in reality
 
+		# NOTE: fairly pointless to authenticate
+		# 		since the query identified them anyway
 		if @user \
-		and @user.authenticated?(reset, params[:id])
-			then
-			sign_in user
-			render edit_password_reset_path(@user)
+		and @user.activated? \
+		and @user.authenticated?(:reset, reset_token)
+		then
+			@user.reset_token = reset_token #for debug only
+			# allow default render iof path to complete
+			# render edit_password_reset_url(params[:id],email: params[:email])
+
 		else
-			flash[:danger] = "Password Reset edit failed - invalid reset token or invalid user!"
+			flash[:danger] = "Password Reset edit failed - invalid reset token, unactivated or invalid user!"
 			redirect_to root_url
 		end
   	end
 
 	# 
-  	# on submit of password reset form
+  	# on submit of ../password_resets/edit.html.erb form
   	# 
   	def update
-  		@user = User.find_by(params[:id])
-  		# TODO
-  		if @user
-  			# TODO digest the password, update the password_digest, confirm reset, sign in
-  			# @user.reset_password
-  			@user.update_attribute(users_params)
+  		@user = User.find(params[:id])
+  		if @user.reset_password(user_params)
+  			sign_in @user
+  			flash[:success] = "Password reset successfully!"
+  			redirect_to @user
   		else
-  			flash[:failure] = "Failed to reset password"
-  			redirect_to root_url
+  			flash[:danger] = "Failed to reset password!"
+  			render 'edit'
   		end	
-  			
   	end
 
 private

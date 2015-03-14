@@ -279,6 +279,7 @@ describe User do
       expect(@user.authenticated?(:activation, User.new_token)).to be false
     end    
     it "should authenticate valid token" do
+      # puts @user.activation_token.to_s
       pending "not currently working"
       expect(@user.authenticated?(:activation, @user.activation_token)).to be true
     end    

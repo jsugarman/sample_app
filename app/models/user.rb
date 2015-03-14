@@ -91,6 +91,21 @@ class User < ActiveRecord::Base
 		update_attribute(:reset_sent_at, Time.zone.now)
 	end
 
+	def reset_password(reset_params)
+		# 
+		# extend the passed in params hash 
+		# (containing the password and password confirmation 
+		# hash elements) with a reset_digest invalidate 
+		# any futre attempts at resetting using that hash
+		# extending the hash allows one call and saved update
+		# on the db
+		# 
+		reset_params[:reset_digest] = ''
+		update_attributes(reset_params)
+		# TODO nil the digest so that it cannot be resued
+		# self.update_attribute(:reset_digest, '')
+	end
+
 private
 
 	def create_remember_token
