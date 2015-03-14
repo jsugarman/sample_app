@@ -273,15 +273,14 @@ describe User do
   # -----------------------------------
   describe "Activation" do
     it "should not authenticate nil token" do
-      expect(@user.authenticated?('')).to be false
+      expect(@user.authenticated?(:activation, '')).to be false
     end    
     it "should not authenticate random token" do
-      expect(@user.authenticated?(User.new_token)).to be false
+      expect(@user.authenticated?(:activation, User.new_token)).to be false
     end    
     it "should authenticate valid token" do
-      # puts @user.activation_token.to_s
       pending "not currently working"
-      expect(@user.authenticated?(@user.activation_token)).to be true
+      expect(@user.authenticated?(:activation, @user.activation_token)).to be true
     end    
   end # end of Activation block
 

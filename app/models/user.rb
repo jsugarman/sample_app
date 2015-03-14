@@ -9,7 +9,6 @@ class User < ActiveRecord::Base
 
 	#bcrypt-ruby Gem add-in method
 	has_secure_password
-
 	has_many :microposts, -> { order 'created_at desc' }, dependent: :destroy
 
 	# 
@@ -47,11 +46,12 @@ class User < ActiveRecord::Base
 		return Digest::SHA1.hexdigest(token.to_s)
 	end
 
-	def authenticated?(activation_token)
-		if self.activation_digest.nil?
+	def authenticated?(attribute, token)
+		digest = self.send("#{attribute}_digest")
+		if digest.nil?
 			return false
 		else
-			return User.digest(activation_token) == self.activation_digest
+			return User.digest(token) == digest
 		end
 	end
 
@@ -87,10 +87,9 @@ class User < ActiveRecord::Base
 
 	def create_reset_digest
 		self.reset_token = User.new_token
-		self.update_attribute(:reset_digest, User.digest(self.reset_token))
-		self.update_attribute(:reset_sent_at, Time.zone.now)
+		update_attribute(:reset_digest, User.digest(self.reset_token))
+		update_attribute(:reset_sent_at, Time.zone.now)
 	end
-
 
 private
 

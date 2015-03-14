@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe UserMailer do
 
-	let(:user) { FactoryGirl.create(:user) }
+	
 
 	# describe "Registration Confirmation mail" do
 	# 	let(:mail) { UserMailer.registration_confirmation(user) }
@@ -15,15 +15,37 @@ describe UserMailer do
 	# 	pending "To: address test needs refining to include \"name <email>\" syntax" 
 	# end
 
-	describe "Account Activation mail" do
+	describe "account_activation" do
+		let(:user) { FactoryGirl.create(:user) }
 		let(:mail) { UserMailer.account_activation(user) }
 		it "To: shoud have expected format" do expect(mail.to).to have_content("#{user.email}") end
 		it "Subject: field should have expected text" do  expect(mail.subject).to eq(full_title("Activation Required for #{ user.name }")) end
 		it "Body: should have Activate Link" do  expect(mail.body.encoded).to have_link('Activate', href: edit_account_activation_url(user.activation_token, email: user.email)) end
 		it "Body: should greet user by name" do  expect(mail.body.encoded).to have_content("Hi #{user.name}") end
-		pending "To: address test needs refining to include \"name <email>\" syntax" 
+		# TODO pending "To: address test needs refining to include \"name <email>\" syntax" 
 	end
 
+	describe "password_reset" do
+		let(:user) { FactoryGirl.create(:user) }
+		before do 
+			# puts "BEFORE"
+			user.create_reset_digest
+		end	
+		after do
+			# puts "AFTER"
+			# puts mail.body.encoded 
+			user.destroy!
+		end
+		# after(:all) { user.destroy! }
+		describe "for one user" do
+			let(:mail) { UserMailer.password_reset(user) }
+			it "From: " do expect(mail.from).to have_content("rortestmailer@gmail.com") end
+			it "To: shoud have expected format" do expect(mail.to).to have_content("#{user.email}") end
+			it "Subject: field should have expected text" do  expect(mail.subject).to eq(full_title("Password reset requested for #{user.name}")) end
+			it "Body: should have reset Link" do expect(mail.body.encoded).to have_link("reset", href: edit_password_reset_url(user.reset_token,email: user.email)) end
+			it "Body: should greet user by name" do  expect(mail.body.encoded).to have_content("Hi #{user.name}") end
+ 			# TODO pending "To: address test needs refining to include \"name <email>\" syntax"
+ 		end
+	end
 
-  
 end

@@ -2,9 +2,8 @@ class AccountActivationsController < ApplicationController
 
 	def edit
 		user = User.find_by(email: params[:email])
-		activation_token = params[:id]
 		if user  \
-		and user.authenticated?(activation_token) \
+		and user.authenticated?(:activation, params[:id]) \
 		and not user.activated?		
 			then 
 			user.activate
