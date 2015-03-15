@@ -1,10 +1,16 @@
 class PasswordResetsController < ApplicationController
+
+	# 
+	# callbacks/declarative
+	# 
+	before_action :get_user, 			only: [:edit, :update]
+	before_action :valid_user,			only: [:edit, :update]
+ 	before_action :check_expiration, 	only: [:edit, :update]
   
 	# 
 	# on click of forgottem password link
 	# 
 	def new
-		@title = "Forgotten Password"
 	end
 
 	# 
@@ -27,39 +33,24 @@ class PasswordResetsController < ApplicationController
 
 	# 
 	# called from mail link
+	# NOTE: reset token only available in form params reliably
 	# 
 	def edit
-		@title = "Reset Password"
-		reset_token = params[:id]
-		@user = User.find_by(reset_digest: User.digest(reset_token)) # this authenticates in reality
-
-		# NOTE: fairly pointless to authenticate
-		# 		since the query identified them anyway
-		if @user \
-		and @user.activated? \
-		and @user.authenticated?(:reset, reset_token)
-		then
-			@user.reset_token = reset_token #for debug only
-			# allow default render iof path to complete
-			# render edit_password_reset_url(params[:id],email: params[:email])
-
-		else
-			flash[:danger] = "Password Reset edit failed - invalid reset token, unactivated or invalid user!"
-			redirect_to root_url
-		end
   	end
 
 	# 
   	# on submit of ../password_resets/edit.html.erb form
   	# 
   	def update
-  		@user = User.find(params[:id])
-  		if @user.reset_password(user_params)
+  		if password_blank? 
+  			flash.now[:danger] = "Password reset failed - password blank!"
+  			render 'edit'
+  		elsif @user.reset_password(user_params)
   			sign_in @user
   			flash[:success] = "Password reset successfully!"
   			redirect_to @user
   		else
-  			flash[:danger] = "Failed to reset password!"
+  			# form error, no flash should be displayed
   			render 'edit'
   		end	
   	end
@@ -70,5 +61,29 @@ private
 		params.require(:user).permit(:password, :password_confirmation)
 	end
 
+	def password_blank?
+ 		params[:user][:password].blank?
+	end
+
+	def get_user
+		@user = User.find_by(email: params[:email])
+	end
+
+	def valid_user
+		unless (@user && 
+			@user.activated? && 
+			@user.authenticated?(:reset, params[:id])
+				)
+			flash[:error] = "Password reset failed - invalid, unactivated or unauthenticated user!"
+			redirect_to root_url
+		end
+	end
+
+	def check_expiration
+		if @user.password_reset_expired?
+			flash[:danger] = "Password reset failed - time limit expired!"
+			redirect_to root_url
+		end
+	end
 
 end

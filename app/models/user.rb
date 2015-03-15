@@ -95,15 +95,17 @@ class User < ActiveRecord::Base
 		# 
 		# extend the passed in params hash 
 		# (containing the password and password confirmation 
-		# hash elements) with a reset_digest invalidate 
-		# any futre attempts at resetting using that hash
-		# extending the hash allows one call and saved update
-		# on the db
+		# hash elements) with a null reset_digest in order to 
+		# invalidate any futre attempts at resetting using that 
+		# hash extending the hash allows one call and saved update
+		# on the db.
 		# 
 		reset_params[:reset_digest] = ''
 		update_attributes(reset_params)
-		# TODO nil the digest so that it cannot be resued
-		# self.update_attribute(:reset_digest, '')
+	end
+
+	def password_reset_expired?
+		return reset_sent_at < 2.hours.ago
 	end
 
 private
