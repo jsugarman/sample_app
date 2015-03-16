@@ -162,7 +162,7 @@ describe "Authentication Pages" do
       let (:admin) { FactoryGirl.create(:admin) }
       before { sign_in admin, no_capybara: true }
       describe "submitting a DELETE request to the users#destroy action for themselves" do
-          specify { expect { delete user_path(admin) }.to_not change(User, :count).by(-1) }
+          specify { expect { delete user_path(admin) }.not_to change(User, :count) }
           before { delete user_path(admin) }
           specify { expect(response).to redirect_to(users_path) }
       end
