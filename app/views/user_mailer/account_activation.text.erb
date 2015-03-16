@@ -2,8 +2,9 @@ Hi <%= @user.name %>
 
 Welcome to the Sample App.
 
+You now need to activate your account using the link below:
 
-You now need to <%= link_to "Activate", edit_account_activation_url(@user.activation_token, email: @user.email) %> your account to get starting.
+<%= edit_account_activation_url(@user.activation_token, email: @user.email) %>
 
 
 Enjoy!
