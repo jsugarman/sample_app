@@ -26,6 +26,7 @@ SampleApp::Application.configure do
   # 
   config.action_mailer.delivery_method = :test
 
+
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
 

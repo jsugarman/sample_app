@@ -14,3 +14,4 @@ Figaro.require_keys("dev_mailer_username","dev_mailer_password") unless not Rail
 # ensure mail is redirected in development mode
 # 
 ActionMailer::Base.register_interceptor(RedirectMailInterceptor) unless not Rails.env.development?
+  # ActionMailer::Base.preview_path = Rails.root.join('spec','mailers','previews') unless not Rails.env.development?
