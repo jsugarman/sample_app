@@ -7,7 +7,7 @@ describe Micropost do
 	let (:user) { FactoryGirl.create(:user) }
 
 	it "has a valid factory" do
-  		FactoryGirl.build(:micropost, user: user).should be_valid
+  		expect(FactoryGirl.build(:micropost, user: user)).to be_valid
   	end
 	
 	before do
@@ -26,7 +26,10 @@ describe Micropost do
 	# end
 
 	context "when micropost.user called" do
-		its(:user) { should == user}
+		describe '#user' do
+		  subject { super().user }
+		  it { is_expected.to eq(user)}
+		end
 	end	
 
 	context "when user_id is NOT present" do
@@ -47,7 +50,7 @@ describe Micropost do
 	context "when user_id updated" do
 		# before { @micropost.user_id = 201 }
 		specify "it should prevent changing of user_id" do
-			pending "need test ensure controller cannot modify user_id attribute"
+			skip "need test ensure controller cannot modify user_id attribute"
 		 	expect(@micropost.user_id).to_not eq(201)
 		end
 	end

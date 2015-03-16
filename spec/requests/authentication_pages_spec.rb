@@ -13,7 +13,7 @@ describe "Authentication Pages" do
       it { expect(page).to have_link('Sign in',     href: signin_path) }
 
       it "should render a captcha" do
-        pending "to be implemented  using RMagick?!"
+        skip "to be implemented  using RMagick?!"
       end
 
       describe "with invalid information" do

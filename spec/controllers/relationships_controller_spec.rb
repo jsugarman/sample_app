@@ -15,7 +15,7 @@ describe RelationshipsController do
 		end
 		it "should respond with success" do
 		  xhr :post, :create, relationship: { followed_id: other_user.id }
-		  response.should be_success
+		  expect(response).to be_success
 		end
 	end
 

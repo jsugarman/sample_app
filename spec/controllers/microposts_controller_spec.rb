@@ -22,7 +22,7 @@ describe MicropostsController do
 	end
 
 	describe "DELETE destroy" do
-		pending "needs fixing - no route error"
+		skip "needs fixing - no route error"
 		# before { sign_in user }
 		# it "decrements micropost count" do
 			

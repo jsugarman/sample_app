@@ -3,7 +3,7 @@ require 'spec_helper'
 describe User do
 
   it "has a valid factory" do
-  	FactoryGirl.build(:user).should be_valid
+  	expect(FactoryGirl.build(:user)).to be_valid
   end
 
   before do
@@ -13,28 +13,28 @@ describe User do
 
   subject { @user }
 
-  it { should respond_to(:name) }
-  it { should respond_to(:email) }
-  it { should respond_to(:password_digest) }
-  it { should respond_to(:password) }
-  it { should respond_to(:password_confirmation) }
-  it { should respond_to(:authenticate) }
-  it { should respond_to(:remember_token) }
-  it { should respond_to(:admin) }
-  it { should respond_to(:microposts) }
-  it { should respond_to(:feed) }
-  it { should respond_to(:relationships) }
-  it { should respond_to(:followed_users) }
-  it { should respond_to(:reverse_relationships) }
-  it { should respond_to(:followers) }
-  it { should respond_to(:follow!) } 
-  it { should respond_to(:following?) } 
-  it { should respond_to(:unfollow!) } 
-  it { should respond_to(:activation_digest) } 
-  it { should respond_to(:activation_token) } 
-  it { should respond_to(:activated_at) } 
-  it { should be_valid }
-  it { should_not be_admin }
+  it { is_expected.to respond_to(:name) }
+  it { is_expected.to respond_to(:email) }
+  it { is_expected.to respond_to(:password_digest) }
+  it { is_expected.to respond_to(:password) }
+  it { is_expected.to respond_to(:password_confirmation) }
+  it { is_expected.to respond_to(:authenticate) }
+  it { is_expected.to respond_to(:remember_token) }
+  it { is_expected.to respond_to(:admin) }
+  it { is_expected.to respond_to(:microposts) }
+  it { is_expected.to respond_to(:feed) }
+  it { is_expected.to respond_to(:relationships) }
+  it { is_expected.to respond_to(:followed_users) }
+  it { is_expected.to respond_to(:reverse_relationships) }
+  it { is_expected.to respond_to(:followers) }
+  it { is_expected.to respond_to(:follow!) } 
+  it { is_expected.to respond_to(:following?) } 
+  it { is_expected.to respond_to(:unfollow!) } 
+  it { is_expected.to respond_to(:activation_digest) } 
+  it { is_expected.to respond_to(:activation_token) } 
+  it { is_expected.to respond_to(:activated_at) } 
+  it { is_expected.to be_valid }
+  it { is_expected.not_to be_admin }
 
   describe "with admin attribute set to 'true'" do
     before do
@@ -42,17 +42,17 @@ describe User do
       @user.toggle!(:admin)
     end
 
-    it { should be_admin }
+    it { is_expected.to be_admin }
   end
 
   describe "when name is not present" do
     before { @user.name = " " }
-    it { should_not be_valid }
+    it { is_expected.not_to be_valid }
   end
 
   describe "when email is not present" do
     before { @user.email = " " }
-    it { should_not be_valid }
+    it { is_expected.not_to be_valid }
   end
 
   describe "when email is mixed case" do
@@ -68,7 +68,7 @@ describe User do
 
   describe "when name is too long" do
     before { @user.name = "a" * 65 }
-    it { should_not be_valid }
+    it { is_expected.not_to be_valid }
   end
 
   describe "when email format is invalid" do
@@ -99,7 +99,7 @@ describe User do
       user_with_same_email.save
     end
 
-    specify { should_not be_valid }
+    specify { is_expected.not_to be_valid }
   end
 
   describe "when password is not present" do
@@ -107,17 +107,17 @@ describe User do
 	@user = User.new(name: "Example User", email: "user@example.com",
 	                 password: " ", password_confirmation: " ")
 	end
-	specify { should_not be_valid }
+	specify { is_expected.not_to be_valid }
   end
 
   describe "when password doesn't match confirmation" do
     before { @user.password_confirmation = "mismatch" }
-    specify { should_not be_valid }
+    specify { is_expected.not_to be_valid }
   end
 
   describe "when password is too short" do
   	before {@user.password = @user.password_confirmation = "a" * 5}
-  	specify { should be_invalid }
+  	specify { is_expected.to be_invalid }
   end
 
   describe "return value of authenticate method" do
@@ -125,21 +125,25 @@ describe User do
 	  let(:found_user) { User.find_by(email: @user.email) }
 
 	  describe "with valid password" do
-	    specify { should eq found_user.authenticate(@user.password) }
+	    specify { is_expected.to eq found_user.authenticate(@user.password) }
 	  end
 
 	  describe "with invalid password" do
 	    let(:user_for_invalid_password) { found_user.authenticate("invalid") }
 
-	    specify { should_not eq user_for_invalid_password }
-	    specify { expect(user_for_invalid_password).to be_false }
+	    specify { is_expected.not_to eq user_for_invalid_password }
+	    specify { expect(user_for_invalid_password).to be_falsey }
 	  end
 
   end
 
   describe "when saving" do
     before { @user.save }
-    its(:remember_token) { should_not be_blank }
+
+    describe '#remember_token' do
+      subject { super().remember_token }
+      it { is_expected.not_to be_blank }
+    end
   end
 
   # -----------------------------------
@@ -161,7 +165,7 @@ describe User do
 
       microposts.each do |micropost|
         # expect(Micropost.find_by_id(micropost.id)).to be_empty
-        Micropost.find_by_id(micropost.id).should be_nil
+        expect(Micropost.find_by_id(micropost.id)).to be_nil
       end
     end
 
@@ -280,7 +284,7 @@ describe User do
     end    
     it "should authenticate valid token" do
       # puts @user.activation_token.to_s
-      pending "not currently working"
+      skip "not currently working"
       expect(@user.authenticated?(:activation, @user.activation_token)).to be true
     end    
   end # end of Activation block

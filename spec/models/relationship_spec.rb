@@ -21,11 +21,19 @@ describe Relationship do
 	# NOTE: its method is depreacted
 	# 
 	# it { expect(:follower).to eq(relationship.follower) } 
-	its(:follower) { should == follower }
-	its(:followed) { should == followed }
+
+	describe '#follower' do
+	  subject { super().follower }
+	  it { is_expected.to eq(follower) }
+	end
+
+	describe '#followed' do
+	  subject { super().followed }
+	  it { is_expected.to eq(followed) }
+	end
 	
 	it "should prevent access to follower id" do
-		pending "should, infact, prevent follower_id being changed via controller"
+		skip "should, infact, prevent follower_id being changed via controller"
 		expect do
 			Relationship.new(follower_id: follower.id)
 		end.to raise_error(-20000, "whatever error")		
