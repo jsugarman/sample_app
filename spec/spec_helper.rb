@@ -42,7 +42,7 @@ Spork.prefork do
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
-  require 'rspec/autorun'
+  # require 'rspec/autorun'
 
   # added to enable javascript testing features - SEE BELOW for more on this
   # require 'capybara/rspec'
