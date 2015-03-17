@@ -233,4 +233,62 @@ describe "Authentication Pages" do
       end
     end # end of Activation block
 
+
+    describe PasswordResetsController do
+      let(:user) { FactoryGirl.create(:user) }
+      # 
+      # response checks
+      # 
+      describe "when forgotten password clicked" do
+        skip "todo" do
+        # describe "GET the new_password_reset path" do
+          # before { get new_password_reset_path }
+          # it { exepct(response.status).to eq(404) }
+        # end
+
+        # describe "when submitted with invalid email" do
+        #   before { post password_resets_path }
+        #   it{ expect(response).to render new_password_reset_path }
+        # # end
+        # describe "when submitted with valid email" do
+        #   before { post password_resets_path }
+        #   it{ expect(response).to redirect_to root_url }
+        end
+
+      end
+
+
+      # 
+      #  capybara
+      # 
+      describe "when forgotten password clicked" do
+        before do 
+          visit signin_path 
+          click_link "forgotten password"
+        end
+        it { expect(page).to have_title("Forgotten Password") }
+        describe "when invalid email submitted" do
+          before do
+           fill_in 'Email', with: 'whatever@hole.com.uk'
+           click_button 'Submit reset request'
+          end
+          it { expect(page).to have_title("Forgotten Password")  }
+          it { expect(page).to have_message('danger','not found') }
+        end
+        describe "when valid email submitted" do
+          before do
+           fill_in 'Email', with: user.email
+           click_button 'Submit reset request'
+          end
+          it { expect(page).to have_title(full_title(''))  }
+          it { expect(page).to have_link('Sign up now')  }
+          it { expect(page).to have_message('info',"confirmation sent to #{user.email}") }
+        end
+
+
+      end
+      
+
+    end # end of password reset controller tests
+
 end # end of suite
