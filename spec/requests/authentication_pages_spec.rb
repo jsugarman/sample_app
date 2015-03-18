@@ -235,28 +235,37 @@ describe "Authentication Pages" do
 
 
     describe PasswordResetsController do
+
       let(:user) { FactoryGirl.create(:user) }
-      # 
-      # response checks
-      # 
-      describe "when forgotten password clicked" do
-        skip "todo" do
-        # describe "GET the new_password_reset path" do
-          # before { get new_password_reset_path }
-          # it { exepct(response.status).to eq(404) }
-        # end
 
-        # describe "when submitted with invalid email" do
-        #   before { post password_resets_path }
-        #   it{ expect(response).to render new_password_reset_path }
-        # # end
-        # describe "when submitted with valid email" do
-        #   before { post password_resets_path }
-        #   it{ expect(response).to redirect_to root_url }
+      before { ActionMailer::Base.deliveries.clear }
+
+      describe "responds to" do
+        describe "GET new" do
+          before { get new_password_reset_path }
+          it "renders new template " do          
+            expect(response).to render_template(:new)
+          end
         end
-
-      end
-
+        describe "POST with invalid email" do
+          before { post password_resets_path, password_resets: { email: 'whatever@where.com' } }
+          it "does NOT incremement mail deliveries" do
+            expect(ActionMailer::Base.deliveries.count).to eq(0)
+          end
+          it "renders new template again" do
+            expect(response).to render_template(:new)
+          end
+        end
+        describe "POST with valid email address" do
+          before { post password_resets_path, password_resets: { email:  user.email } }
+          it "increments mail deliveries by 1 " do
+            expect(ActionMailer::Base.deliveries.count).to eq(1)
+          end
+          it "redirects to root" do
+            expect(response).to  redirect_to_root
+          end
+        end
+     end
 
       # 
       #  capybara
@@ -284,11 +293,8 @@ describe "Authentication Pages" do
           it { expect(page).to have_link('Sign up now')  }
           it { expect(page).to have_message('info',"confirmation sent to #{user.email}") }
         end
-
-
       end
       
-
     end # end of password reset controller tests
 
 end # end of suite
