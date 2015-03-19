@@ -240,32 +240,94 @@ describe "Authentication Pages" do
 
       before { ActionMailer::Base.deliveries.clear }
 
-      describe "responds to" do
-        describe "GET new" do
-          before { get new_password_reset_path }
-          it "renders new template " do          
-            expect(response).to render_template(:new)
+       describe "new_password_reset controller" do
+          describe "GET new" do
+            before { get new_password_reset_path }
+            it "renders new template " do          
+              expect(response).to render_template(:new)
+            end
+          end
+          describe "POST with invalid email" do
+            before { post password_resets_path, password_resets: { email: 'whatever@where.com' } }
+            it "does NOT incremement mail deliveries" do
+              expect(ActionMailer::Base.deliveries.count).to eq(0)
+            end
+            it "renders new template again" do
+              expect(response).to render_template(:new)
+            end
+          end
+          describe "POST with valid email address" do
+            before { post password_resets_path, password_resets: { email:  user.email } }
+            it "increments mail deliveries by 1 " do
+              expect(ActionMailer::Base.deliveries.count).to eq(1)
+            end
+            it "redirects to root" do
+              expect(response).to  redirect_to_root
+            end
+          end
+      end
+      
+      describe "edit_password_reset controller" do
+        it "with invalid reset token" do
+          get edit_password_reset_path('invalid token', {email: user.email}) 
+          expect(response).to redirect_to_root
+        end
+        describe "with valid reset token and... " do
+          before do
+            # 
+            # use model to create reset digest
+            # 
+            user.create_reset_digest
+          end
+          it "valid email, activated user should render edit template" do
+            get edit_password_reset_path(user.reset_token, {email: user.email})
+            expect(response).to render_template('edit')
+          end
+          it "invalid mail should redirecto to root" do
+            get edit_password_reset_path(user.reset_token, {email: 'invalid email'})
+            expect(response).to redirect_to_root
+          end
+          it "valid email but unactivated user should redirect to root" do
+            user.toggle!(:activated)
+            get edit_password_reset_path(user.reset_token, {email: user.email})
+            expect(response).to redirect_to_root
           end
         end
-        describe "POST with invalid email" do
-          before { post password_resets_path, password_resets: { email: 'whatever@where.com' } }
-          it "does NOT incremement mail deliveries" do
-            expect(ActionMailer::Base.deliveries.count).to eq(0)
-          end
-          it "renders new template again" do
-            expect(response).to render_template(:new)
-          end
+      end
+
+      describe "password_reset controller" do
+        before do
+          user.create_reset_digest
         end
-        describe "POST with valid email address" do
-          before { post password_resets_path, password_resets: { email:  user.email } }
-          it "increments mail deliveries by 1 " do
-            expect(ActionMailer::Base.deliveries.count).to eq(1)
-          end
-          it "redirects to root" do
-            expect(response).to  redirect_to_root
-          end
+        it "valid email and password should redirect to user\'s page" do 
+          patch password_reset_path(user.reset_token),
+          { email: user.email, 
+                    user: { 
+                        password: "foobar", 
+                        password_confirmation: "foobar" 
+                    }
+           }
+           expect(response).to redirect_to(user)
         end
-     end
+        it "invalid email, valid password should redirect to root" do 
+          patch password_reset_path(user.reset_token),
+          { email: 'invalid email', user: { password: "foobar", password_confirmation: "foobar" }
+           }
+           expect(response).to redirect_to_root
+        end
+        it "valid email, invalid password should remain on page" do 
+          patch password_reset_path(user.reset_token),
+          { email: user.email, user: { password: "different", password_confirmation: "passwords" }
+           }
+           expect(response).to render_template 'edit'
+        end
+        it "valid email, blank password should remain on page" do 
+          patch password_reset_path(user.reset_token),
+          { email: user.email, user: { password: " ", password_confirmation: "irrelevant" }
+           }
+           expect(response).to render_template 'edit'
+        end
+      end
 
       # 
       #  capybara
@@ -295,6 +357,47 @@ describe "Authentication Pages" do
         end
       end
       
+      describe "when reseting the password" do
+        before do
+          user.create_reset_digest
+        end
+
+        describe "using invalid email" do
+          before do
+              visit edit_password_reset_path(user.reset_token, {
+              email: 'invalid email'} )
+          end
+          it { expect(page).to have_title('Sample App') }
+          it { expect(page).to have_message('error','invalid') }
+          it { expect(page).to have_link('Sign in', href: signin_path) }
+        end
+      
+        describe "using valid email" do
+          before do
+              visit edit_password_reset_path(user.reset_token, {
+              email: user.email } )
+          end
+          it { expect(page).to have_button("Reset Now") }
+          it { expect(page).to have_title("Password Reset") }
+        end
+
+        describe "submitting" do
+          before do
+              visit edit_password_reset_path(user.reset_token, {
+              email: user.email})
+          end
+          describe  "with valid password" do
+            before do
+              fill_in 'Password',     with: "foobar"
+              fill_in 'Confirmation', with: "foobar"
+              click_button 'Reset Now'
+            end
+            it { expect(page).to have_title(user.name) }
+          end
+        end
+      end
+
+
     end # end of password reset controller tests
 
 end # end of suite
