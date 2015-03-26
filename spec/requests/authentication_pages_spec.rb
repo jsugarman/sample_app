@@ -95,6 +95,12 @@ describe "Authentication Pages" do
         # use get only in this case
         # 
         describe "in the Users controller" do
+
+          describe "when visiting the show page" do
+            before { get user_path(user) }
+            specify { expect(response).to redirect_to_signin }
+          end
+
           describe "when visiting the edit page" do
             before { get edit_user_path(user) }
             specify { expect(response).to redirect_to_signin }
