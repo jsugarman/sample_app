@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
 
-	attr_accessor :activation_token, :reset_token
+	attr_accessor :remember_token, :activation_token, :reset_token
 
 	# hooks
 	before_save{ self.email.downcase! }
-	before_create :create_remember_token
+	before_create :create_remember_digest
 	before_create :create_activation_digest
 
 	#bcrypt-ruby Gem add-in method
@@ -110,9 +110,10 @@ class User < ActiveRecord::Base
 
 private
 
-	def create_remember_token
+	def create_remember_digest
 		# create secure token for permananet signin between sessions
 		self.remember_token = User.new_token
+		self.remember_digest = User.digest(self.remember_token)
 	end
 
 	def create_activation_digest

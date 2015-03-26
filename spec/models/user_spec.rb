@@ -19,7 +19,8 @@ describe User do
   it { is_expected.to respond_to(:password) }
   it { is_expected.to respond_to(:password_confirmation) }
   it { is_expected.to respond_to(:authenticate) }
-  it { is_expected.to respond_to(:remember_token) }
+  it { is_expected.to respond_to(:remember_token) } 
+  it { is_expected.to respond_to(:remember_digest) }
   it { is_expected.to respond_to(:admin) }
   it { is_expected.to respond_to(:microposts) }
   it { is_expected.to respond_to(:feed) }
@@ -142,6 +143,11 @@ describe User do
 
     describe '#remember_token' do
       subject { super().remember_token }
+      it { is_expected.not_to be_blank }
+    end
+
+    describe '#remember_digest' do
+      subject { super().remember_digest }
       it { is_expected.not_to be_blank }
     end
   end
@@ -276,6 +282,11 @@ describe User do
 
   # -----------------------------------
   describe "Activation" do
+    before do
+      @user.activation_token = User.new_token
+      @user.activation_digest = User.digest(@user.activation_token)
+      @user.save!
+    end
     it "should not authenticate nil token" do
       expect(@user.authenticated?(:activation, '')).to be false
     end    
@@ -283,11 +294,9 @@ describe User do
       expect(@user.authenticated?(:activation, User.new_token)).to be false
     end    
     it "should authenticate valid token" do
-      # puts @user.activation_token.to_s
-      skip "not currently working"
       expect(@user.authenticated?(:activation, @user.activation_token)).to be true
     end    
   end # end of Activation block
-
-
+  # -----------------------------------
+  
 end

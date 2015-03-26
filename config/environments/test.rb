@@ -25,6 +25,7 @@ SampleApp::Application.configure do
   #  i.e. add mail to ActionMailer::Base.deliveries array
   # 
   config.action_mailer.delivery_method = :test
+  config.action_mailer.preview_path = Rails.root.join('spec','mailers','previews')
 
 
   # Raise exceptions instead of rendering exception templates.

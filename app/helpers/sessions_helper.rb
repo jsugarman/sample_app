@@ -7,7 +7,7 @@ module SessionsHelper
     else
       cookies[:remember_token] = remember_token
     end
-    user.update_attribute(:remember_token, User.digest(remember_token))
+    user.update_attribute(:remember_digest, User.digest(remember_token))
     self.current_user = user
   end
 
@@ -20,8 +20,9 @@ module SessionsHelper
   end
 
   def current_user
-    remember_token = User.digest(cookies[:remember_token])
-    @current_user ||= User.find_by(remember_token: remember_token)
+    remember_digest = User.digest(cookies[:remember_token])
+    @current_user ||= User.find_by(remember_digest: remember_digest)
+    # @current_user ||= User.find_by_remember_token(cookies[:remember_token]) # from tutorial
   end
 
   def current_user?(user)
@@ -29,7 +30,7 @@ module SessionsHelper
   end
 
   def sign_out
-    current_user.update_attribute(:remember_token,
+    current_user.update_attribute(:remember_digest,
                                   User.digest(User.new_token))
     cookies.delete(:remember_token)
     self.current_user = nil
@@ -47,7 +48,7 @@ module SessionsHelper
   def signed_in_user
     unless signed_in?
       store_location
-      redirect_to signin_url, notice: "Please sign in." unless signed_in?
+      redirect_to signin_url, notice: "Please sign in."
     end
   end
 

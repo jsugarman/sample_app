@@ -12,7 +12,7 @@ def sign_in(user, options={})
     # Sign in when not using Capybara.
     remember_token = User.new_token
     cookies[:remember_token] = remember_token
-    user.update_attribute(:remember_token, User.digest(remember_token))
+    user.update_attribute(:remember_digest, User.digest(remember_token))
   else
     visit signin_path
     valid_signin(user)

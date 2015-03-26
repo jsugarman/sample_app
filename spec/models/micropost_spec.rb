@@ -47,13 +47,5 @@ describe Micropost do
 		specify { expect(subject).to_not be_valid}
 	end
 
-	context "when user_id updated" do
-		# before { @micropost.user_id = 201 }
-		specify "it should prevent changing of user_id" do
-			skip "need test ensure controller cannot modify user_id attribute"
-		 	expect(@micropost.user_id).to_not eq(201)
-		end
-	end
-
 
 end
