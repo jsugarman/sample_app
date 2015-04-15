@@ -9,10 +9,10 @@ SampleApp::Application.routes.draw do
 
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
-      resources :microposts, only: [:show, :index]
+      resources :microposts, only: [:show, :index, :create, :update, :destroy]
     end
     namespace :v2 do
-      resources :microposts, only: [:show,:index]
+      resources :microposts, only: [:show,:index, :create, :update, :destroy]
     end
   end
 

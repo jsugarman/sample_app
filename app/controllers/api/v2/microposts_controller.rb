@@ -12,6 +12,18 @@ module Api
 			def show
 				respond_with @micropost, only: [:id, :user_id,:content,:created_at] 
 			end
+
+			def create
+				respond_with Micropost.create(params[:micropost])
+			end
+
+			def update
+				respond_with Micropost.update(params[:id],params[:micropost])
+			end
+
+			def destroy
+				respond_with Micropost.destroy(params[:id])
+			end
 		end
 	end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MicropostsController do
+RSpec.describe MicropostsController, type: :controller do
 
 	let(:user) { FactoryGirl.create(:user) }
 	let(:wrong_user) { FactoryGirl.create(:user) }
