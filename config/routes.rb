@@ -7,7 +7,14 @@ SampleApp::Application.routes.draw do
     end
   end
 
-  resources :micropost_apis, only: [:show, :index] 
+  namespace :api, defaults: { format: 'json' } do
+    namespace :v1 do
+      resources :microposts, only: [:show, :index]
+    end
+    namespace :v2 do
+      resources :microposts, only: [:show,:index]
+    end
+  end
 
   resources :sessions, only: [:new, :create, :destroy]
   resources :microposts, only: [:create, :destroy]

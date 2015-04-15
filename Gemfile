@@ -15,27 +15,34 @@ gem 'haml', '~> 4.0.6'
 gem 'haml-rails', '>= 0.3.4'
 
 group :development, :test do
-  # gem 'sqlite3', '1.3.8'
-  # gem 'rspec-rails', '2.13.1'
-  # gem 'rspec-rails', '2.99.0' - upgrade path to rpsec 3
-  gem 'rspec-rails', '~> 3.0'
+  # gem 'sqlite3', '1.3.8'  
   # gem 'guard-rspec', '2.5.0'
-  gem 'guard-rspec', ' ~> 4.5'
-  gem 'spork-rails', '4.0.0'
-  gem 'guard-spork', '1.5.0'
-  gem 'childprocess', '0.3.6'
+  # gem 'guard-rspec', ' ~> 4.5'
+  # gem 'guard-rspec', require: false
+  # gem 'spork-rails', '4.0.0'
+  # gem 'guard-spork', '1.5.0'
+  # gem 'guard-spork'
+  # gem 'childprocess', '0.3.6'
   gem 'figaro', '~>1.0'
   gem 'minitest'
-  # gem 'htmlbeautifier'
+  gem 'guard-rspec'
+  gem 'guard-livereload'
+  gem 'spork-rails', github: 'sporkrb/spork-rails' # rubygems version not rails 4 compatible
+  gem 'guard-spork'
+  gem 'childprocess'
 end
 
 group :test do
+  # gem 'rspec-rails', '2.13.1'
+  # gem 'rspec-rails', '2.99.0' - upgrade path to rpsec 3
+  gem 'rspec-rails', '~> 3.0'
   gem 'selenium-webdriver', '2.35.1'
   # gem 'capybara', '2.1.0'
   gem 'capybara', '2.4.4'
   gem 'capybara-webkit', '>= 1.3.1'
   gem 'database_cleaner', '1.4.0'
-  gem 'growl', '1.0.3'
+  # gem 'growl', '1.0.3'
+  gem 'growl'
   gem 'factory_girl_rails', '4.2.1'
 end
 
